@@ -33,7 +33,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-  ],
+, "src/utils/utils.js", "src/directive/clickBlankCloseBox.js"  ],
   "exclude": [
     "node_modules"
   ]
