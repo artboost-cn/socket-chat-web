@@ -158,6 +158,10 @@ export default function ({ mode, type }: WebRtcType) {
       // create在对方接受邀请后才调用，因为发起方在邀请过程中就需要打开摄像头，而接收方只有在接受后才打开
       // if (mode === 'sender') { createOffer() } else 
       if (mode === 'receiver') createAnswer()
+    }).catch(err => {
+      console.log(err);
+      message.error('获取媒体流失败, 请检查摄像头和麦克风权限哦!')
+      hangup()
     })
 
     // 创建offer的方法
