@@ -45,7 +45,7 @@ type logoutType = {
 }
 
 // 获取用户信息
-export function api_getUserInfo(params: { userId: string }) {
+export function api_getUserInfo(params: { userId: string | number }) {
   return request.get('/users/get_user_info', { params }) as unknown as getUserInfoType
 }
 

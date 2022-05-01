@@ -1,7 +1,7 @@
-import { Friend, Session, User } from "@/type";
+import { Friend, PC, Session, User } from "@/type";
 import { createStore } from "vuex";
 
-type State = {
+interface State {
   userInfo: null | User,
   currentSession: Session | null,
   sessionListData: {
@@ -13,7 +13,13 @@ type State = {
     isReq: boolean,
     list: Friend[],
   },
-  totalUnread: number
+  totalUnread: number,
+  pc: PC | null,
+  chatStatus: {
+    chat: boolean,
+    privateChat: boolean,
+    videoCall: boolean,
+  }
 }
 
 export default createStore({
@@ -36,6 +42,14 @@ export default createStore({
     },
     // 未读信息总数
     totalUnread: 0,
+    // PeerConnection
+    pc: null,
+    // 当前聊天所处状态
+    chatStatus: {
+      chat: true,
+      videoCall: false,
+      privateChat: false,
+    }
   }),
   mutations: {
     // 更新用户信息
@@ -63,6 +77,14 @@ export default createStore({
       state.totalUnread = total
     },
 
+    setPC(state, pc) {
+      state.pc = pc;
+    },
+
+    setChatStatus(state, data: { type: keyof State['chatStatus'], status: boolean }) {
+      state.chatStatus[data.type] = data.status
+    },
+
     // 从好友列表中添加好友
     addFriend(state, friendInfo) {
       state.friendListData.list.push(friendInfo)
@@ -75,7 +97,13 @@ export default createStore({
         isReq: state.friendListData.isReq,
         list: list,
       }
-    }
+    },
+
+    // 选择指定receiverId的session
+    selectSessionById(state, receiverId: number) {
+      const session = state.sessionListData.list.find(item => item.receiverId === receiverId)
+      if (session) state.currentSession = session
+    },
   },
   getters: {},
   actions: {},

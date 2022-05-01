@@ -1,4 +1,4 @@
-import { Modal, Upload, Button } from 'ant-design-vue'
+import { Modal, Upload, Button, Tooltip } from 'ant-design-vue'
 
 import 'ant-design-vue/dist/antd.css';
 import { App } from 'vue';
@@ -30,5 +30,6 @@ export default function (app: App) {
   app.use(Modal)
     .use(Upload)
     .use(Button)
+    .use(Tooltip)
     .component("AIcon", Fonts)
 }

@@ -10,7 +10,7 @@
     <scroll-box listenHeight topDisabled :bottomDisabled="disabledLoad" @touchBottom="touchBottom" class="session-list-container">
       <div
         class="session-item"
-        :class="store.state.currentSession && store.state.currentSession.sessionId == item.sessionId ? 'current-session' : ''"
+        :class="{ 'current-session': store.state.currentSession && store.state.currentSession.sessionId == item.sessionId }"
         v-for="item in store.state.sessionListData.list"
         :key="item.sessionId"
         @click="changeSession(item)"

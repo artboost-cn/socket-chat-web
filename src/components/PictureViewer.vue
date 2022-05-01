@@ -8,8 +8,8 @@
 </template>
 
 <script lang="ts">
-import Pubsub from 'pubsub-js'
-import { defineComponent, onMounted, onUnmounted, reactive, toRefs } from 'vue'
+import { defineComponent, onBeforeMount, reactive, toRefs } from 'vue'
+import useSubscribe from '@/hooks/subscribe'
 
 export default defineComponent({
   name: 'picture-viewer',
@@ -24,12 +24,8 @@ export default defineComponent({
     let disableClick = false
 
     // 生命周期
-    onMounted(() => {
-      Pubsub.subscribe('viewPicture', viewPicture)
-    })
-
-    onUnmounted(() => {
-      Pubsub.unsubscribe('viewPicture')
+    onBeforeMount(() => {
+      useSubscribe([{ msgName: 'viewPicture', callback: viewPicture }])
     })
 
     // methods

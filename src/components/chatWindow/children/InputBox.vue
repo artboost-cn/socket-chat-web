@@ -11,7 +11,13 @@
         </upload-cmp>
       </div>
       <div class="bar-right">
-        <i class="iconfont icon-shipin" @click="$message.info('视频功能待开发, 持续关注哦')"></i>
+        <a-tooltip placement="topLeft">
+          <template #title>
+            <span :style="{ color: 'white' }">点对点私密聊天, 聊天信息将不会经过服务器, 且不会被保存</span>
+          </template>
+          <i class="iconfont icon-jiami" @click="message.info('私密聊天正在火速开发中哦!')"></i>
+        </a-tooltip>
+        <i class="iconfont icon-shipin" @click="videoHandler"></i>
       </div>
     </div>
     <!-- chat-input -->
@@ -36,6 +42,11 @@ import { ComponentInternalInstance, getCurrentInstance } from 'vue'
 
 import { FileInfo, InputChatItem } from '@/type'
 
+import useWebRtc from '@/hooks/webrtc'
+
+// 最大呼叫时间
+const MAXCALLTIME = 15
+
 export default {
   components: { ChatInput, EmojiDialog, UploadCmp },
   name: 'input-box',
@@ -45,7 +56,7 @@ export default {
 
     // methods
     // 发送消息的回调
-    // type 0:文字   1:图片    2:文件    3:自定义表情
+    // type 0:文字   1:图片    2:文件    3:自定义表情    4: 通知   5: 视频邀请
     const sendMsg = (content: string | File, type = 0, fileInfo?: FileInfo) => {
       let chatItem: InputChatItem = {
         content,
@@ -98,12 +109,27 @@ export default {
       })
     }
 
+    const videoHandler = () => {
+      // 发送视频邀请
+      sendMsg('[视频通话]', 5)
+      useWebRtc({ mode: 'sender', type: ['videoCall'] })
+      setTimeout(() => {
+        if (store.state.pc?.iceConnectionState === 'new') {
+          // new说明还没有进入连接状态   自动挂断
+          message.info('通话暂时无人接听哦!')
+          store.state.pc.hangup()
+        }
+      }, MAXCALLTIME * 1000)
+    }
+
     return {
       sendMsg,
       dropFile,
       uploadFile,
       selectEmoji,
       proxy,
+      videoHandler,
+      message,
     }
   },
 }
@@ -126,7 +152,7 @@ export default {
 .function-bar {
   display: flex;
   justify-content: space-between;
-  padding: 3px 15px;
+  padding: 2px 15px;
 }
 
 .bar-left {

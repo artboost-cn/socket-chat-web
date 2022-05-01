@@ -31,21 +31,12 @@
 import { api_getNotiList } from '@/api/notification'
 import ScrollBox from '@/components/ScrollBox.vue'
 import Loading from '@/components/Loading.vue'
-import Pubsub from 'pubsub-js'
 import moment from 'moment'
 import { reactive, toRefs } from '@vue/reactivity'
-import {
-  onBeforeUnmount,
-  onMounted,
-  nextTick,
-  getCurrentInstance,
-  computed,
-  ComponentInternalInstance,
-  onBeforeMount,
-  defineComponent,
-} from 'vue'
+import { onMounted, nextTick, getCurrentInstance, computed, ComponentInternalInstance, onBeforeMount, defineComponent } from 'vue'
 import { useStore } from 'vuex'
-import { Subscribe, Notification, NotiMsg } from '@/type'
+import { Notification, NotiMsg } from '@/type'
+import useSubscribe from '@/hooks/subscribe'
 
 export default defineComponent({
   components: { ScrollBox, Loading },
@@ -62,25 +53,14 @@ export default defineComponent({
       handleTime: computed(() => (time: string) => moment(parseInt(time)).format('YYYY年MM月DD日 HH:mm')),
     }
 
-    const subscribe: Subscribe = []
+    // 生命周期
     onBeforeMount(() => {
-      subscribe.push({ msgName: 'notice', callback: addNotification, token: '' })
+      useSubscribe([{ msgName: 'notice', callback: addNotification }])
     })
 
-    // 生命周期
     onMounted(() => {
-      subscribe.forEach((item, index, list) => {
-        list[index].token = Pubsub.subscribe(item.msgName, item.callback)
-      })
-
       // 第一次创建时直接请求通知数据
       getNotiList()
-    })
-
-    onBeforeUnmount(() => {
-      subscribe.forEach((item) => {
-        Pubsub.unsubscribe(item.token)
-      })
     })
 
     // methods
@@ -148,7 +128,7 @@ export default defineComponent({
   },
 })
 
-type State = {
+interface State {
   notiList: Notification[]
   topDisabled: boolean
 }

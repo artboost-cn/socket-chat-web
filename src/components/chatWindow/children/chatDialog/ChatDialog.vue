@@ -27,9 +27,10 @@ import NotificationTag from './children/NotificationTag.vue'
 import ScrollBox from '@/components/ScrollBox.vue'
 import Loading from '@/components/Loading.vue'
 
-import Pubsub from 'pubsub-js'
 import moment from 'moment'
 import { reactive, toRefs } from '@vue/reactivity'
+import useSubscribe from '@/hooks/subscribe'
+
 import {
   onBeforeUnmount,
   onMounted,
@@ -44,7 +45,7 @@ import {
 import { useStore } from 'vuex'
 
 import { Canceler } from 'axios'
-import { TimeTag, SuccessMsg, FailMsg, ReceiveMsg, ChatItem, Subscribe } from '@/type'
+import { TimeTag, SuccessMsg, FailMsg, ReceiveMsg, ChatItem } from '@/type'
 import { message } from 'ant-design-vue'
 
 export default defineComponent({
@@ -65,7 +66,6 @@ export default defineComponent({
       cancelChatListFunc: null,
     })
     // let scrollBox = ref(null)
-    const subscribe: Subscribe = []
     let scrollBox: typeof ScrollBox | null = null
 
     let timeTagFunc: ((item1: ChatItem | ReceiveMsg, item2: ChatItem | ReceiveMsg) => TimeTag | undefined) | null = null
@@ -73,32 +73,26 @@ export default defineComponent({
     // 生命周期
     onBeforeMount(() => {
       timeTagFunc = createTimeTag()
-      subscribe.push(
+
+      useSubscribe([
         // 监听输入框发送的消息
-        { msgName: 'sendMsg', callback: sendMsg, token: '' },
+        { msgName: 'sendMsg', callback: sendMsg },
         // 接收其它用户发送的消息
-        { msgName: 'chat', callback: receiveChat, token: '' },
+        { msgName: 'chat', callback: receiveChat },
         // 发送消息成功
-        { msgName: 'sendMsgSuccess', callback: sendMsgSuccess, token: '' },
+        { msgName: 'sendMsgSuccess', callback: sendMsgSuccess },
         // 发送消息失败
-        { msgName: 'sendMsgFail', callback: sendMsgFail, token: '' }
-      )
+        { msgName: 'sendMsgFail', callback: sendMsgFail },
+      ])
     })
     onMounted(() => {
       // scrollBox=scrollBox.value && (scrollBox.value as typeof ScrollBox)
       scrollBox = proxy && (proxy.$refs.scrollBox as typeof ScrollBox)
-      subscribe.forEach((item, index, list) => {
-        list[index].token = Pubsub.subscribe(item.msgName, item.callback)
-      })
       // 第一次创建时直接请求聊天数据
       getChatList()
     })
 
     onBeforeUnmount(() => {
-      subscribe.forEach((item) => {
-        Pubsub.unsubscribe(item.token)
-      })
-
       state.cancelChatListFunc && state.cancelChatListFunc()
     })
 

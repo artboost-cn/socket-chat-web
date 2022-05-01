@@ -106,7 +106,7 @@ export default defineComponent({
   },
 })
 
-type State = {
+interface State {
   disabled: boolean
   fileList: FileItem[][]
 }

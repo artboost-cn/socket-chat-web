@@ -12,7 +12,7 @@
       <div
         class="session-item"
         @click="selectFriend({ id: -1, userName: '新的好友', avatar: '', email: '' })"
-        :class="store.state.currentFriend && store.state.currentFriend.id === -1 ? 'current-session' : ''"
+        :class="{ 'current-session': store.state.currentFriend && store.state.currentFriend.id === -1 }"
       >
         <div class="cover"><img src="../assets/img/newFriend.png" alt="" /></div>
         <div class="session-info">
@@ -22,7 +22,7 @@
       <!-- 好友列表 -->
       <div
         class="session-item"
-        :class="store.state.currentFriend && store.state.currentFriend.id === item.id ? 'current-session' : ''"
+        :class="{ 'current-session': store.state.currentFriend && store.state.currentFriend.id === item.id }"
         @click="selectFriend(item)"
         @click.right.prevent="rightClick($event, item)"
         v-for="item in store.state.friendListData.list"

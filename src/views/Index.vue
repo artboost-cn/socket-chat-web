@@ -6,6 +6,7 @@
     <router-view></router-view>
     <picture-viewer></picture-viewer>
     <right-click-menu></right-click-menu>
+    <video-req-dialog></video-req-dialog>
   </div>
 </template>
 
@@ -23,7 +24,8 @@ import RightClickMenu from '@/components/RightClickMenu.vue'
 import Pubsub from 'pubsub-js'
 import { defineComponent, onMounted } from '@vue/runtime-core'
 import { message, notification } from 'ant-design-vue'
-import { FailMsg, FriendReqMsg, LoginMsg, MsgType, ReceiveMsg, SuccessMsg } from '@/type'
+import { FailMsg, FriendReqMsg, LoginMsg, MsgType, ReceiveMsg, SuccessMsg, WebRtcMsg } from '@/type'
+import VideoReqDialog from '@/components/VideoReqDialog.vue'
 
 export default defineComponent({
   name: 'HomeView',
@@ -32,6 +34,7 @@ export default defineComponent({
     PictureViewer,
     // HelloWorld,
     RightClickMenu,
+    VideoReqDialog,
   },
   setup() {
     const store = useStore()
@@ -58,6 +61,17 @@ export default defineComponent({
       // 接收聊天信息
       window.$socket.on('chat', (data: ReceiveMsg) => {
         Pubsub.publish('chat', data)
+
+        if (data.type === 5) {
+          // 视频邀请
+          Pubsub.publish('videoReq', {
+            senderId: data.talkerId,
+          })
+        }
+      })
+
+      window.$socket.on('webRTC', (data: WebRtcMsg) => {
+        Pubsub.publish('webRTC', data)
       })
 
       // 接收通知信息

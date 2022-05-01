@@ -89,7 +89,7 @@ export default defineComponent({
   },
 })
 
-type State = {
+interface State {
   friendReqList: FriendRequest[]
   bottomDisabled: boolean
 }

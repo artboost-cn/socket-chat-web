@@ -22,6 +22,10 @@
         </div>
         <!-- 文件信息 -->
         <download-card v-else-if="chat.type == 2" :file="chat.content" :fileInfo="fileInfo"></download-card>
+        <!-- 视频通话 -->
+        <div class="message-container message" v-if="chat.type == 5">
+          <i class="iconfont icon-shipin"></i>我发起了一个视频通话
+        </div>
       </div>
     </div>
     <div class="avatar"><img :src="store.state.userInfo.avatar" alt="" /></div>
@@ -34,10 +38,10 @@ import DownloadCard from '@/components/DownloadCard.vue'
 import Loading from '@/components/Loading.vue'
 
 import Pubsub from 'pubsub-js'
-import { computed, defineComponent, onBeforeUnmount, onMounted } from '@vue/runtime-core'
+import { computed, defineComponent, onBeforeUnmount, onMounted, PropType } from 'vue'
 import { message } from 'ant-design-vue'
 
-import { Chat } from './chatItem'
+// import { Chat } from './chatItem'
 import { useStore } from 'vuex'
 import { ChatItem } from '@/type'
 
@@ -46,10 +50,8 @@ export default defineComponent({
   components: { DownloadCard, Loading },
   props: {
     chat: {
-      type: Object,
-      default: (): ChatItem | null => {
-        return null
-      },
+      type: Object as PropType<ChatItem>,
+      default: null,
     },
   },
   setup(props) {
@@ -60,12 +62,12 @@ export default defineComponent({
         // 如果是blob开头, 说明是刚发送的图片
         if (/^blob:/.test(props.chat.content)) return ''
         let reg = /\??size=([0-9]{1,3}x[0-9]{1,3})&?/
-        let arr = props.chat.content.match(reg)[1].split('x')
+        let arr = (props.chat.content.match(reg) as RegExpMatchArray)[1].split('x')
         return `width:${arr[0]}px;height:${arr[1]}px;`
       }),
       fileInfo: computed(() => {
         if (/^blob:/.test(props.chat.content)) return props.chat.fileInfo
-        return JSON.parse(props.chat.others)
+        return JSON.parse(props.chat.others as unknown as string)
       }),
     }
     let timer: number | null = null
@@ -91,13 +93,14 @@ export default defineComponent({
         fileInfo: props.chat.fileInfo,
       }
       window.$socket.emit('chat', chatItem)
+      // 直接改props就报语法错了 这里赋值下再改
       let chat = props.chat
       chat.status = 'loading'
       createTimer()
     }
 
     // 右键点击图片的回调
-    const rightClickPic = (e: MouseEvent, chat: Chat) => {
+    const rightClickPic = (e: MouseEvent, chat: ChatItem) => {
       if (chat.status === 'fail' || chat.status === 'loading') {
         message.info(`图片当前处于${chat.status}阶段, 无法操作`)
         return
@@ -246,5 +249,10 @@ export default defineComponent({
   height: 37px;
   display: flex;
   align-items: center;
+}
+
+.icon-shipin {
+  color: white;
+  margin-right: 5px;
 }
 </style>

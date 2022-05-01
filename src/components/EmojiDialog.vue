@@ -45,10 +45,10 @@
       </div>
       <!-- tab-selector -->
       <div class="tab-selector">
-        <div class="tab-item" :class="currentTab == 0 ? 'current-tab-item' : ''" @click="currentTab = 0">
+        <div class="tab-item" :class="{ 'current-tab-item': currentTab == 0 }" @click="currentTab = 0">
           <i class="iconfont icon-biaoqing-xue"></i>
         </div>
-        <div class="tab-item" :class="currentTab == 1 ? 'current-tab-item' : ''" @click="currentTab = 1">
+        <div class="tab-item" :class="{ 'current-tab-item': currentTab == 1 }" @click="currentTab = 1">
           <i class="iconfont icon-jushoucang"></i>
         </div>
       </div>
@@ -61,10 +61,10 @@
 
 <script lang="ts">
 import { api_getEmoticonList, api_addEmoticon } from '@/api/emoticon'
-import Pubsub from 'pubsub-js'
 import { reactive, toRefs } from '@vue/reactivity'
-import { defineComponent, onBeforeUnmount, onMounted } from '@vue/runtime-core'
+import { defineComponent, onBeforeMount, onMounted } from '@vue/runtime-core'
 import { message, UploadChangeParam } from 'ant-design-vue'
+import useSubscribe from '@/hooks/subscribe'
 
 export default defineComponent({
   name: 'emoji-dialog',
@@ -81,18 +81,15 @@ export default defineComponent({
       uploadEmoLoading: false,
     })
 
+    onBeforeMount(() => {
+      useSubscribe([{ msgName: 'addEmoticon', callback: addEmoticon }])
+    })
+
     // 生命周期
     onMounted(async () => {
       // 获取自定义表情列表
       let res = await api_getEmoticonList()
-
       if (res) state.emoticonList = res.list
-
-      Pubsub.subscribe('addEmoticon', addEmoticon)
-    })
-
-    onBeforeUnmount(() => {
-      Pubsub.unsubscribe('addEmoticon')
     })
 
     // methods
@@ -143,7 +140,7 @@ export default defineComponent({
   },
 })
 
-type State = {
+interface State {
   showDialog: boolean
   emojiNum: number
   currentTab: number

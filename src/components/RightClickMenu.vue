@@ -7,10 +7,10 @@
 </template>
 
 <script lang="ts">
-import Pubsub from 'pubsub-js'
 import { reactive, toRefs } from '@vue/reactivity'
-import { defineComponent, onMounted, onUnmounted } from '@vue/runtime-core'
+import { defineComponent, onBeforeMount } from '@vue/runtime-core'
 import { RightClickMenu } from '@/type'
+import useSubscribe from '@/hooks/subscribe'
 
 export default defineComponent({
   setup() {
@@ -21,12 +21,8 @@ export default defineComponent({
     })
 
     // 生命周期
-    onMounted(() => {
-      Pubsub.subscribe('rightMenu', openMenu)
-    })
-
-    onUnmounted(() => {
-      Pubsub.unsubscribe('rightMenu')
+    onBeforeMount(() => {
+      useSubscribe([{ msgName: 'rightMenu', callback: openMenu }])
     })
 
     // methods
@@ -57,8 +53,10 @@ export default defineComponent({
   },
 })
 
-// type State = { showMenu: boolean } & Omit<RightClickMenu, keyof { showMenu: boolean }>
-type State = { showMenu: boolean } & RightClickMenu
+// type State = { showMenu: boolean } & RightClickMenu
+interface State extends RightClickMenu {
+  showMenu: boolean
+}
 </script>
 
 <style scoped>

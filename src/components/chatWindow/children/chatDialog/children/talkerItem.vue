@@ -18,6 +18,9 @@
         <img :src="chat.content" alt="" @dragstart.prevent @click.stop="checkImg" />
       </div>
       <download-card v-else-if="chat.type == 2" :file="chat.content" :fileInfo="fileInfo"></download-card>
+      <div class="message-container message" v-if="chat.type == 5">
+        <i class="iconfont icon-shipin"></i>对方发起了一个视频邀请
+      </div>
     </div>
   </div>
 </template>
@@ -182,5 +185,9 @@ type State = {
 .item-right > div,
 .avatar {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+}
+.icon-shipin {
+  color: #18191c;
+  margin-right: 5px;
 }
 </style>

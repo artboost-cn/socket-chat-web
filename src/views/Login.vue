@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <div class="card" :class="isLogin ? '' : 'register'">
+    <div class="card" :class="{ register: !isLogin }">
       <!-- login-card -->
       <div class="login-card">
         <i class="iconfont icon-qiehuan" @click="isLogin = !isLogin"></i>

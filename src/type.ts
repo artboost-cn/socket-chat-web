@@ -1,17 +1,17 @@
-export type Subscribe = {
+export interface Subscribe {
   msgName: string,
   callback: any,
-  token: string,
-}[]
+  token?: string,
+}
 
-export type TimeTag = {
+export interface TimeTag {
   content: string;
   component: string;
   updatedAt: string,
 }
 
 // 双方的聊天记录，以及发送方当前发送的消息都是chatItem类型
-export type ChatItem = {
+export interface ChatItem {
   content: string,
   others: { [propname: string]: any },
   receiverId: number,
@@ -23,6 +23,8 @@ export type ChatItem = {
   component?: string,
   status?: string,
   fileInfo?: FileInfo,
+  sessionId?: number,
+  file?: File,
 }
 
 // export type MsgType = {
@@ -36,7 +38,7 @@ export type ChatItem = {
 // socket.on('message', xxx)
 export type MsgType = SuccessMsg | FailMsg | FriendReqMsg | NotiMsg | LoginMsg
 
-export type SuccessMsg = {
+export interface SuccessMsg {
   msgType: string,
   status: string,
   updatedAt: string,
@@ -47,7 +49,7 @@ export type SuccessMsg = {
   type: string,
 }
 
-export type FailMsg = {
+export interface FailMsg {
   msgType: string,
   status: string,
   uuid: string,
@@ -55,7 +57,7 @@ export type FailMsg = {
   content: string,
 }
 
-export type ReceiveMsg = {
+export interface ReceiveMsg {
   content: string,
   updatedAt: string,
   sessionId: string,
@@ -65,32 +67,32 @@ export type ReceiveMsg = {
   component?: string
 }
 
-export type FriendReqMsg = {
+export interface FriendReqMsg {
   msgType: string,
   userInfo: User,
   content: string,
 }
 
-export type NotiMsg = {
+export interface NotiMsg {
   msgType: string
   status: string
   content: string
   time: number
 }
 
-export type LoginMsg = {
+export interface LoginMsg {
   msgType: string,
   status: string,
   time: string,
   content?: string,
 }
 
-export type FileInfo = {
+export interface FileInfo {
   fileName: string,
   size: number,
 }
 
-export type InputChatItem = {
+export interface InputChatItem {
   content: (string | File),
   receiverId: number,
   uuid: string,
@@ -103,7 +105,7 @@ export type InputChatItem = {
   file?: File,
 }
 
-export type User = {
+export interface User {
   id: number,
   userName: string,
   avatar: string,
@@ -111,9 +113,10 @@ export type User = {
   createdAt?: string,
 }
 
-export type Friend = User
+// export type Friend = User 
+export type Friend = User;
 
-export type FriendRequest = {
+export interface FriendRequest {
   content: string,
   createdAt: string,
   friendId: number,
@@ -124,7 +127,7 @@ export type FriendRequest = {
   userId: number,
 }
 
-export type Session = {
+export interface Session {
   cover: string,
   lastChat: string,
   read: number,
@@ -136,14 +139,14 @@ export type Session = {
   user: User | null,
 }
 
-export type Emoticon = {
+export interface Emoticon {
   id: number,
   createdAt: string,
   src: string,
   userId: number
 }
 
-export type FileItem = {
+export interface FileItem {
   createdAt: string,
   fileName: string,
   id: number,
@@ -153,14 +156,28 @@ export type FileItem = {
   userId: number,
 }
 
-export type Notification = {
+export interface Notification {
   createdAt: string,
   id?: number,
   type: number | null,
   userId?: number,
 }
 
-export type RightClickMenu = {
+export interface RightClickMenu {
   menuList: { content: string, callback: any }[],
   position: { x: number, y: number }
+}
+
+export interface PC extends RTCPeerConnection {
+  hangup?: () => void,
+  createOfferFunc?: () => void,
+  createDataChannelFunc?: () => void,
+  closedown?: () => void
+}
+
+export interface WebRtcMsg {
+  type: string,
+  data: RTCSessionDescriptionInit | RTCIceCandidate | string,
+  senderId: number,
+  receiverId: number,
 }

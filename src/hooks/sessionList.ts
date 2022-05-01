@@ -1,18 +1,33 @@
 import { api_getSessionList } from '@/api/session'
 import { api_getUserInfo } from '@/api/user'
-import { NotiMsg, ReceiveMsg, Session, Subscribe, SuccessMsg, User } from '@/type'
+import { NotiMsg, ReceiveMsg, Session, SuccessMsg, User } from '@/type'
 
-import Pubsub from 'pubsub-js'
-import { onBeforeUnmount, onMounted } from 'vue'
+import { onBeforeMount, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
+
+import useWebrtcHandler from './webrtcHandler'
+import useSubscribe from './subscribe'
 
 export default function () {
   const store = useStore()
   const route = useRoute()
-  const subscribe: Subscribe = []
 
   // 生命周期
+  onBeforeMount(() => {
+    useSubscribe([
+      // 监听收到的信息
+      { msgName: 'chat', callback: (name: string, item: ReceiveMsg) => updateSession(item, 0, 'chat') },
+      // 监听发送消息成功的通知
+      { msgName: 'sendMsgSuccess', callback: (name: string, item: SuccessMsg) => updateSession(item, 0, 'sendMsgSuccess') },
+      // 监听通知
+      { msgName: 'notice', callback: (name: string, session: NotiMsg) => updateSession(session, 2, 'notice') },
+    ])
+
+    // 建立webrtc连接的hook
+    useWebrtcHandler()
+  })
+
   onMounted(() => {
     // 如果vuex存在数据,则去除现有的list
     if (store.state.sessionListData.list.length) {
@@ -23,25 +38,6 @@ export default function () {
     }
 
     getSessionList()
-
-    subscribe.push(
-      // 监听收到的信息
-      { msgName: 'chat', callback: (name: string, item: ReceiveMsg) => updateSession(item, 0, 'chat'), token: '' },
-      // 监听发送消息成功的通知
-      { msgName: 'sendMsgSuccess', callback: (name: string, item: SuccessMsg) => updateSession(item, 0, 'sendMsgSuccess'), token: '' },
-      // 监听通知
-      { msgName: 'notice', callback: (name: string, session: NotiMsg) => updateSession(session, 2, 'notice'), token: '' },
-    )
-
-    subscribe.forEach((item, index, list) => {
-      list[index].token = Pubsub.subscribe(item.msgName, item.callback)
-    })
-  })
-
-  onBeforeUnmount(() => {
-    subscribe.forEach(item => {
-      Pubsub.unsubscribe(item.token)
-    })
   })
 
   // methods
@@ -58,7 +54,7 @@ export default function () {
 
   // 更新session (信息发送成功，收到消息，收到通知 都会更新session)
   const updateSession = async (chat: (ReceiveMsg | SuccessMsg | NotiMsg), type = 0, from: string) => {
-    // 浅拷贝, 避免直接修改vuex, 但是这里也可能会直接修改的里面的对象, 但是不是直接修改,关系不大
+    // 浅拷贝, 避免直接修改vuex, 但是这里也可能会直接修改的里面的对象, 但是不是直接修改, 关系不大
     const sessionList = store.state.sessionListData.list.slice()
     let index = null;
     switch (type) {
@@ -67,7 +63,7 @@ export default function () {
         index = sessionList.findIndex((item: Session) => item.sessionId === (chat as ReceiveMsg | SuccessMsg).sessionId)
         break;
 
-      // 通知
+      // 系统通知
       case 2:
         index = sessionList.findIndex((item: Session) => item.receiverId === -1)
         break;
