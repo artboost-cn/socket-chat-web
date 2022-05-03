@@ -7,6 +7,7 @@
     <picture-viewer></picture-viewer>
     <right-click-menu></right-click-menu>
     <video-req-dialog></video-req-dialog>
+    <tone-cmp ref="toneCmp"></tone-cmp>
   </div>
 </template>
 
@@ -22,10 +23,11 @@ import PictureViewer from '@/components/PictureViewer.vue'
 import RightClickMenu from '@/components/RightClickMenu.vue'
 
 import Pubsub from 'pubsub-js'
-import { defineComponent, onMounted } from '@vue/runtime-core'
+import { ComponentInternalInstance, defineComponent, getCurrentInstance, onMounted } from '@vue/runtime-core'
 import { message, notification } from 'ant-design-vue'
 import { FailMsg, FriendReqMsg, LoginMsg, MsgType, ReceiveMsg, SuccessMsg, WebRtcMsg } from '@/type'
 import VideoReqDialog from '@/components/VideoReqDialog.vue'
+import ToneCmp from '@/components/ToneCmp.vue'
 
 export default defineComponent({
   name: 'HomeView',
@@ -35,10 +37,12 @@ export default defineComponent({
     // HelloWorld,
     RightClickMenu,
     VideoReqDialog,
+    ToneCmp,
   },
   setup() {
     const store = useStore()
     const router = useRouter()
+    const { proxy } = getCurrentInstance() as ComponentInternalInstance
 
     // 生命周期
     onMounted(async () => {
@@ -56,10 +60,14 @@ export default defineComponent({
 
       // 建立websocket连接
       //此处本来根据跨域应该为const socket = io('/socket.io'),但是socketio的请求地址默认自带socket.io，所以此处只要传入'/'
-      window.$socket = io('/')
+      // window.$socket = io('/')
+      const socket = io('/')
+      store.commit('setSocket', socket)
 
       // 接收聊天信息
-      window.$socket.on('chat', (data: ReceiveMsg) => {
+      socket.on('chat', (data: ReceiveMsg) => {
+        const toneCmp = proxy?.$refs.toneCmp as typeof ToneCmp
+        toneCmp.playTone()
         Pubsub.publish('chat', data)
 
         if (data.type === 5) {
@@ -70,18 +78,18 @@ export default defineComponent({
         }
       })
 
-      window.$socket.on('webRTC', (data: WebRtcMsg) => {
+      socket.on('webRTC', (data: WebRtcMsg) => {
         Pubsub.publish('webRTC', data)
       })
 
       // 接收通知信息
-      window.$socket.on('message', MsgHandler)
+      socket.on('message', MsgHandler)
     })
 
     // 方法
     // 通知的分类处理方法
     const MsgHandler = (msg: MsgType) => {
-      console.log(msg)
+      // console.log(msg)
 
       switch (msg.msgType) {
         case 'chat':
@@ -108,7 +116,7 @@ export default defineComponent({
         case 'logout':
           // console.log('您的账号已在别的地方登录')
           message.warning('您的账号已在别的地方登录!')
-          window.$socket.disconnect()
+          store.state.socket?.disconnect()
           router.push('/login')
           break
       }

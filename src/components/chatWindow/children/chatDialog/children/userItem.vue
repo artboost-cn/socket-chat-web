@@ -92,7 +92,7 @@ export default defineComponent({
         sessionId: props.chat.sessionId,
         fileInfo: props.chat.fileInfo,
       }
-      window.$socket.emit('chat', chatItem)
+      store.state.socket?.emit('chat', chatItem)
       // 直接改props就报语法错了 这里赋值下再改
       let chat = props.chat
       chat.status = 'loading'

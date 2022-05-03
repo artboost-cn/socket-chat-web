@@ -26,7 +26,7 @@ export default function ({ mode, type }: WebRtcType) {
 
   const onicecandidate = (e: RTCPeerConnectionIceEvent) => {
     if (e.candidate) {
-      window.$socket.emit('webRTC', {
+      store.state.socket?.emit('webRTC', {
         type: 'candidate',
         data: e.candidate,
         receiverId: store.state.currentSession?.receiverId,
@@ -56,7 +56,13 @@ export default function ({ mode, type }: WebRtcType) {
   }
 
   const getLocalMediaStream = async () => {
-    mediaStream = await navigator.mediaDevices.getUserMedia({ audio: false, video: true })
+    try {
+      mediaStream = await navigator.mediaDevices.getUserMedia({ audio: false, video: true })
+    } catch (err) {
+      console.log(err);
+      message.error('获取媒体流失败, 请检查摄像头和麦克风权限哦!')
+      hangup()
+    }
 
     nextTick(() => {
       localVideo = document.querySelector('#local-video') as HTMLMediaElement;
@@ -72,7 +78,7 @@ export default function ({ mode, type }: WebRtcType) {
   const hangup = () => {
     if (pc.iceConnectionState === 'new') {
       // 发送取消请求通知
-      window.$socket.emit('webRTC', {
+      store.state.socket?.emit('webRTC', {
         type: 'videoReq',
         data: 'cancel',
         senderId: store.state.userInfo?.id,
@@ -96,7 +102,7 @@ export default function ({ mode, type }: WebRtcType) {
     // 绑定本地sdp
     await pc.setLocalDescription(answer)
     // 发送本地sdp到远端
-    window.$socket.emit('webRTC', {
+    store.state.socket?.emit('webRTC', {
       type: 'answer',
       data: answer,
       senderId: store.state.userInfo?.id,
@@ -110,7 +116,7 @@ export default function ({ mode, type }: WebRtcType) {
     // 绑定本地sdp
     await pc.setLocalDescription(offer)
     // 发送本地sdp到远端
-    window.$socket.emit('webRTC', {
+    store.state.socket?.emit('webRTC', {
       type: 'offer',
       data: offer,
       senderId: store.state.userInfo?.id,
@@ -158,10 +164,6 @@ export default function ({ mode, type }: WebRtcType) {
       // create在对方接受邀请后才调用，因为发起方在邀请过程中就需要打开摄像头，而接收方只有在接受后才打开
       // if (mode === 'sender') { createOffer() } else 
       if (mode === 'receiver') createAnswer()
-    }).catch(err => {
-      console.log(err);
-      message.error('获取媒体流失败, 请检查摄像头和麦克风权限哦!')
-      hangup()
     })
 
     // 创建offer的方法

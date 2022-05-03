@@ -58,7 +58,7 @@ export default defineComponent({
         router.push('/chat')
       }
 
-      window.$socket.emit('webRTC', {
+      store.state.socket?.emit('webRTC', {
         type: 'videoReq',
         data: 'accept',
         senderId: store.state.userInfo?.id,
@@ -69,7 +69,7 @@ export default defineComponent({
     }
 
     const refuseHandler = () => {
-      window.$socket.emit('webRTC', {
+      store.state.socket?.emit('webRTC', {
         type: 'videoReq',
         data: 'refuse',
         senderId: store.state.userInfo?.id,
