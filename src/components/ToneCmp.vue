@@ -23,7 +23,10 @@ export default defineComponent({
 
       state.audioSrc = tones[type].src
       toneAudio.currentTime = 0
-      toneAudio.play()
+      // 第一次播放需要用户操作，没想这块业务要怎么解决 直接捕获异常了
+      toneAudio.play().catch((err) => {
+        console.log(err)
+      })
     }
 
     return {

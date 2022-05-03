@@ -57,7 +57,7 @@ export default function ({ mode, type }: WebRtcType) {
 
   const getLocalMediaStream = async () => {
     try {
-      mediaStream = await navigator.mediaDevices.getUserMedia({ audio: false, video: true })
+      mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
     } catch (err) {
       console.log(err);
       message.error('获取媒体流失败, 请检查摄像头和麦克风权限哦!')

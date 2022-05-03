@@ -1,7 +1,7 @@
 <template>
   <div class="video-area" v-if="store.state.chatStatus.videoCall">
     <video id="local-video" autoplay muted></video>
-    <video id="remote-video" autoplay></video>
+    <video id="remote-video" autoplay controls @click.prevent></video>
     <div class="hangup-btn" @click="store.state.pc.hangup()">
       <i class="iconfont icon-guaduan"></i>
     </div>
