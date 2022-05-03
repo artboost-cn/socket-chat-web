@@ -1,4 +1,5 @@
 import { Friend, PC, Session, User } from "@/type";
+import { Socket } from "socket.io-client";
 import { createStore } from "vuex";
 
 interface State {
@@ -19,7 +20,8 @@ interface State {
     chat: boolean,
     privateChat: boolean,
     videoCall: boolean,
-  }
+  },
+  socket: Socket | null,
 }
 
 export default createStore({
@@ -49,7 +51,8 @@ export default createStore({
       chat: true,
       videoCall: false,
       privateChat: false,
-    }
+    },
+    socket: null,
   }),
   mutations: {
     // 更新用户信息
@@ -83,6 +86,10 @@ export default createStore({
 
     setChatStatus(state, data: { type: keyof State['chatStatus'], status: boolean }) {
       state.chatStatus[data.type] = data.status
+    },
+
+    setSocket(state, socket) {
+      state.socket = socket
     },
 
     // 从好友列表中添加好友

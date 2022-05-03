@@ -53,7 +53,7 @@ export default defineComponent({
   name: 'chat-dialog',
   props: {
     // 当前的sessionId
-    sessionId: Number,
+    sessionId: String,
   },
   setup() {
     const store = useStore()
@@ -176,6 +176,9 @@ export default defineComponent({
 
     // 发送消息失败的回调
     const sendMsgFail = (name: string, msg: FailMsg) => {
+      // 判断是否处在对应的session
+      if (store.state.currentSession.sessionId !== msg.sessionId) return
+
       let list = state.chatList
       // 倒序遍历数组，因为刚发送的消息一般接近底部
       for (let i = list.length - 1; i >= 0; i--) {

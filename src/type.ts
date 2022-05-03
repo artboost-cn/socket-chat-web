@@ -23,7 +23,7 @@ export interface ChatItem {
   component?: string,
   status?: string,
   fileInfo?: FileInfo,
-  sessionId?: number,
+  sessionId?: string,
   file?: File,
 }
 
@@ -55,6 +55,7 @@ export interface FailMsg {
   uuid: string,
   time: string,
   content: string,
+  sessionId: string,
 }
 
 export interface ReceiveMsg {
@@ -97,7 +98,7 @@ export interface InputChatItem {
   receiverId: number,
   uuid: string,
   type: number,
-  sessionId: number,
+  sessionId: string,
   fileInfo?: FileInfo,
   senderId?: number,
   status?: string,

@@ -66,7 +66,7 @@ export default {
         sessionId: store.state.currentSession.sessionId,
         fileInfo,
       }
-      window.$socket.emit('chat', chatItem)
+      store.state.socket?.emit('chat', chatItem)
 
       chatItem['senderId'] = store.state.userInfo.id
       chatItem['status'] = 'loading'

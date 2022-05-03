@@ -24,6 +24,8 @@ import { reactive, toRefs } from '@vue/reactivity'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { defineComponent } from '@vue/runtime-core'
+import store from '@/store'
+import { Socket } from 'socket.io-client'
 
 export default defineComponent({
   name: 'more-menu',
@@ -41,8 +43,10 @@ export default defineComponent({
         router.push('/login')
         message.info('退出登录成功!')
         // 断开websocket
-        window.$socket.disconnect()
-        window.$socket = null
+        const socket = store.state.socket as Socket
+        socket.disconnect()
+        // socket = null
+        store.commit('setSocket', null)
       }
     }
 

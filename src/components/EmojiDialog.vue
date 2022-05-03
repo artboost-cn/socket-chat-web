@@ -30,13 +30,14 @@
           @change="handleChange"
         >
           <div>
-            <a-icon :type="uploadEmoLoading ? 'loading' : 'plus'" />
+            <!-- <a-icon :type="uploadEmoLoading ? 'loading' : 'plus'" /> -->
+            <loading-outlined v-if="uploadEmoLoading"></loading-outlined>
+            <plus-outlined v-else></plus-outlined>
           </div>
         </a-upload>
         <img
           class="emoticon-item"
-          :data-src="item.src"
-          alt=""
+          v-lazyload="item.src"
           v-for="item in emoticonList"
           :key="item.id"
           @dragstart.prevent
@@ -65,9 +66,11 @@ import { reactive, toRefs } from '@vue/reactivity'
 import { defineComponent, onBeforeMount, onMounted } from '@vue/runtime-core'
 import { message, UploadChangeParam } from 'ant-design-vue'
 import useSubscribe from '@/hooks/subscribe'
+import { PlusOutlined, LoadingOutlined } from '@ant-design/icons-vue'
 
 export default defineComponent({
   name: 'emoji-dialog',
+  components: { PlusOutlined, LoadingOutlined },
   setup(props, { emit }) {
     const state: State = reactive({
       // 是否展示表情框

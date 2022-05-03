@@ -19,12 +19,12 @@ export function debounce(callback: any) {
 }
 
 // 节流
-export function throttle(callback: () => void) {
+export function throttle(callback: any) {
   let timer = -1;
-  return function (delay = 200) {
+  return function (params: { [propname: string]: any }, delay = 200) {
     if (timer) return
     timer = setTimeout(() => {
-      callback()
+      callback(params)
       timer = -1;
     }, delay)
   }

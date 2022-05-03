@@ -9,7 +9,7 @@
           <input type="text" v-model="loginInfo.userName" placeholder="请输入用户名" />
         </div>
         <div>
-          <input type="password" v-model="loginInfo.password" placeholder="请输入密码" />
+          <input type="password" v-model="loginInfo.password" placeholder="请输入密码" @keydown.enter="login" />
         </div>
         <div class="btn" @click="login">登录</div>
       </div>
@@ -28,14 +28,16 @@
           >
             <img v-if="registerInfo.avatar" :src="registerInfo.avatar" alt="avatar" />
             <div v-else>
-              <a-icon :type="imgLoading ? 'loading' : 'plus'" />
+              <!-- <a-icon :type="imgLoading ? 'loading' : 'plus'" /> -->
+              <loading-outlined v-if="imgLoading"></loading-outlined>
+              <plus-outlined v-else></plus-outlined>
             </div>
           </a-upload>
           <input type="text" placeholder="取一个名字" v-model="registerInfo.userName" />
         </div>
         <div><input type="password" placeholder="输入你的密码" v-model="registerInfo.password" /></div>
         <div><input type="password" placeholder="确认你的密码" v-model="registerInfo.confirmPassword" /></div>
-        <div><input type="text" placeholder="输入你的邮箱" v-model="registerInfo.email" /></div>
+        <div><input type="text" placeholder="输入你的邮箱" v-model="registerInfo.email" @keydown.enter="signin" /></div>
         <div class="btn" @click="signin">注册</div>
       </div>
     </div>
@@ -49,9 +51,11 @@ import { useRouter } from 'vue-router'
 import { defineComponent, onMounted, reactive, toRefs } from 'vue'
 import { message } from 'ant-design-vue'
 import type { UploadChangeParam, UploadProps } from 'ant-design-vue'
+import { PlusOutlined, LoadingOutlined } from '@ant-design/icons-vue'
 
 export default defineComponent({
   name: 'ChatLogin',
+  components: { PlusOutlined, LoadingOutlined },
   setup() {
     const store = useStore()
     const router = useRouter()
@@ -76,7 +80,7 @@ export default defineComponent({
       if (store.state.userInfo) {
         router.go(0)
       }
-      window.$socket && window.$socket.disconnect()
+      store.state.socket?.disconnect()
     })
 
     // 点击登录的回调
@@ -132,7 +136,7 @@ export default defineComponent({
 
     const handleChange = (info: UploadChangeParam) => {
       if (info.file.status === 'uploading') {
-        state.isLogin = true
+        state.imgLoading = true
         return
       }
       if (info.file.status === 'done') {
@@ -206,6 +210,10 @@ export default defineComponent({
   background-color: #f5f5f5;
   backface-visibility: hidden;
   transform: translateZ(1px);
+}
+
+.login-card > div {
+  width: 185px;
 }
 
 .register-card {
@@ -310,6 +318,7 @@ input:focus {
 
 .register-card > div {
   margin: 3px;
+  width: 185px;
 }
 
 .register-card .btn {

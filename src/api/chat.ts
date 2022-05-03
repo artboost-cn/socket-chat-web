@@ -4,7 +4,7 @@ import axios from "axios";
 
 // 获取聊天记录
 export function api_getChatList(
-  params: { sessionId: number; lastTime?: number },
+  params: { sessionId: string; lastTime?: number },
   state: { [propname: string]: any }
 ) {
   return request.get("/chats/get_chat_list", {

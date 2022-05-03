@@ -54,13 +54,16 @@ export default function () {
 
   // 更新session (信息发送成功，收到消息，收到通知 都会更新session)
   const updateSession = async (chat: (ReceiveMsg | SuccessMsg | NotiMsg), type = 0, from: string) => {
+    const chatMsg = chat as ReceiveMsg | SuccessMsg
+    const notiMsg = chat as NotiMsg
+
     // 浅拷贝, 避免直接修改vuex, 但是这里也可能会直接修改的里面的对象, 但是不是直接修改, 关系不大
     const sessionList = store.state.sessionListData.list.slice()
     let index = null;
     switch (type) {
       // 私聊
       case 0:
-        index = sessionList.findIndex((item: Session) => item.sessionId === (chat as ReceiveMsg | SuccessMsg).sessionId)
+        index = sessionList.findIndex((item: Session) => item.sessionId === chatMsg.sessionId)
         break;
 
       // 系统通知
@@ -80,7 +83,7 @@ export default function () {
       } else if (from !== 'sendMsgSuccess' && /^\/chat/.test(route.path) && currentSession && session.sessionId == currentSession.sessionId) {
         // 如果是当前会话窗口，每接收一次信息就会执行一次这个位置
         // 为了避免频繁的调用http请求，这里使用socket告诉服务器当前所在的session
-        window.$socket.emit('request', {
+        store.state.socket?.emit('request', {
           function: 'resetUnread',
           params: {
             sessionId: session.sessionId,
@@ -90,13 +93,13 @@ export default function () {
       }
 
       session.lastChat = chat.content;
-      session.updatedAt = (chat as ReceiveMsg | SuccessMsg).updatedAt || (chat as NotiMsg).time
+      session.updatedAt = chatMsg.updatedAt || notiMsg.time
       sessionList.unshift(session)
     } else {
       // 不存在此session，需要创建一个session
       // 请求用户信息
-      const res = await api_getUserInfo({ userId: (chat as ReceiveMsg | SuccessMsg).talkerId })
-      const sessionItem = createSessionItem(res.userInfo, parseInt((chat as ReceiveMsg | SuccessMsg).sessionId), chat.content)
+      const res = await api_getUserInfo({ userId: chatMsg.talkerId })
+      const sessionItem = createSessionItem(res.userInfo, chatMsg.sessionId, chat.content)
       sessionList.unshift(sessionItem)
     }
     // 将最新sessionList保存到vuex中
@@ -105,7 +108,7 @@ export default function () {
   }
 
   // 创建新的sessionItem
-  const createSessionItem = (userInfo: User, sessionId: number, lastChat: string) => {
+  const createSessionItem = (userInfo: User, sessionId: string, lastChat: string) => {
     const sessionItem = {
       cover: userInfo.avatar,
       lastChat: lastChat,

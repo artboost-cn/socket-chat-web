@@ -18,10 +18,10 @@ import { App } from 'vue';
 //   }
 // }
 
-import { createFromIconfontCN } from '@ant-design/icons-vue';
-const Fonts = createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_3243513_tpd19zgtmy.js'
-})
+// import { createFromIconfontCN } from '@ant-design/icons-vue';
+// const Fonts = createFromIconfontCN({
+//   scriptUrl: '//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js'
+// })
 
 export default function (app: App) {
   // app.config.globalProperties.$message = message
@@ -31,5 +31,5 @@ export default function (app: App) {
     .use(Upload)
     .use(Button)
     .use(Tooltip)
-    .component("AIcon", Fonts)
+  // .component("AIcon", Fonts)
 }

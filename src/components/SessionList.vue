@@ -63,7 +63,7 @@ export default defineComponent({
       timeHandler: computed(
         () =>
           function (time: string) {
-            if (parseInt(time) >= today) return moment(parseInt(time) * 1).format('HH:mm')
+            if (parseInt(time) >= today) return moment(parseInt(time)).format('HH:mm')
             else return moment(parseInt(time) * 1).format('YY/M/DD')
           }
       ),
@@ -84,7 +84,7 @@ export default defineComponent({
       if (store.state.currentSession) {
         store.commit('setTotalUnread', store.state.totalUnread - store.state.currentSession.read)
         store.state.currentSession.read = 0
-        window.$socket.emit('request', {
+        store.state.socket.emit('request', {
           function: 'resetUnread',
           params: {
             sessionId: store.state.currentSession.sessionId,
@@ -102,7 +102,7 @@ export default defineComponent({
       // 清空未读数
       session.read = 0
       // api_resetUnread({ sessionId: session.sessionId })
-      window.$socket.emit('request', {
+      store.state.socket.emit('request', {
         function: 'resetUnread',
         params: {
           sessionId: session.sessionId,
