@@ -31,17 +31,17 @@
         >
           <div>
             <!-- <a-icon :type="uploadEmoLoading ? 'loading' : 'plus'" /> -->
-            <loading-outlined v-if="uploadEmoLoading"></loading-outlined>
+            <loading-outlined v-if="imgLoading"></loading-outlined>
             <plus-outlined v-else></plus-outlined>
           </div>
         </a-upload>
         <img
           class="emoticon-item"
-          v-lazyload="item.src"
-          v-for="item in emoticonList"
-          :key="item.id"
+          v-for="i in emoticonList"
+          :key="i.id"
+          v-lazyload="i.src"
           @dragstart.prevent
-          @click="selectEmoji(1, item.src)"
+          @click="selectEmoji(1, i.src)"
         />
       </div>
       <!-- tab-selector -->
@@ -64,9 +64,10 @@
 import { api_getEmoticonList, api_addEmoticon } from '@/api/emoticon'
 import { reactive, toRefs } from '@vue/reactivity'
 import { defineComponent, onBeforeMount, onMounted } from '@vue/runtime-core'
-import { message, UploadChangeParam } from 'ant-design-vue'
+import { message } from 'ant-design-vue'
 import useSubscribe from '@/hooks/subscribe'
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons-vue'
+import useAUploadHook from '@/hooks/aUploadHook'
 
 export default defineComponent({
   name: 'emoji-dialog',
@@ -80,8 +81,6 @@ export default defineComponent({
       currentTab: 0,
       // 表情包列表
       emoticonList: [],
-      //
-      uploadEmoLoading: false,
     })
 
     onBeforeMount(() => {
@@ -103,28 +102,10 @@ export default defineComponent({
       state.showDialog = false
     }
 
-    const handleChange = (info: UploadChangeParam) => {
-      if (info.file.status === 'uploading') {
-        state.uploadEmoLoading = true
-        return
-      }
-      if (info.file.status === 'done') {
-        state.emoticonList.unshift({ id: info.file.response.id, src: info.file.response.src })
-        state.uploadEmoLoading = false
-      }
-    }
-
-    const beforeUpload = (file: File) => {
-      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
-      if (!isJpgOrPng) {
-        message.error('You can only upload JPG file!')
-      }
-      const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isLt2M) {
-        message.error('Image must smaller than 2MB!')
-      }
-      return isJpgOrPng && isLt2M
-    }
+    const { imgLoading, handleChange, beforeUpload } = useAUploadHook((response) => {
+      const src = response.src + '?size=' + response.size?.width + 'x' + response.size?.height
+      state.emoticonList.unshift({ id: response.emoticonId, src })
+    })
 
     const addEmoticon = async (name: string, src: string) => {
       let res = await api_addEmoticon({ src })
@@ -139,6 +120,7 @@ export default defineComponent({
       selectEmoji,
       handleChange,
       beforeUpload,
+      imgLoading,
     }
   },
 })
@@ -148,7 +130,6 @@ interface State {
   emojiNum: number
   currentTab: number
   emoticonList: { id: number; src: string }[]
-  uploadEmoLoading: boolean
 }
 </script>
 

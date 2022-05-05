@@ -103,7 +103,7 @@ export default defineComponent({
   },
 })
 
-type State = {
+interface State {
   userInfo: User | null
 }
 </script>

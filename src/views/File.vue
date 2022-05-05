@@ -33,8 +33,6 @@ import { api_getFileList } from '@/api/files'
 import ScrollBox from '@/components/ScrollBox.vue'
 import Loading from '@/components/Loading.vue'
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import Pubsub from 'pubsub-js'
 import moment from 'moment'
 import { computed, defineComponent, onMounted, reactive, toRefs } from 'vue'

@@ -50,8 +50,8 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { defineComponent, onMounted, reactive, toRefs } from 'vue'
 import { message } from 'ant-design-vue'
-import type { UploadChangeParam, UploadProps } from 'ant-design-vue'
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons-vue'
+import useAUploadHook from '@/hooks/aUploadHook'
 
 export default defineComponent({
   name: 'ChatLogin',
@@ -71,9 +71,8 @@ export default defineComponent({
         confirmPassword: '',
         email: '',
       },
+      // 是否是登录状态 还是注册状态
       isLogin: true,
-
-      imgLoading: false,
     })
 
     onMounted(() => {
@@ -102,65 +101,46 @@ export default defineComponent({
 
     // 点击注册的回调
     const signin = async () => {
+      const info = state.registerInfo
       // 判断是否存在空值
-      for (var key in state.registerInfo) {
-        if (!state.registerInfo[key as keyof typeof state.registerInfo].trim()) {
+      for (let key in info) {
+        if (!info[key as keyof typeof info].trim()) {
           message.warning(`${key}不能为空哦`)
           return
         }
       }
 
-      if (state.registerInfo.password !== state.registerInfo.confirmPassword) {
+      if (info.password !== info.confirmPassword) {
         message.warning('两次密码不一致')
         return
       }
 
       // 正则校验邮箱
       let emailReg = /^[A-Za-z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
-      if (!emailReg.test(state.registerInfo.email)) {
+      if (!emailReg.test(info.email)) {
         message.warning('邮箱格式错误')
         return
       }
 
-      let res = await api_signin(state.registerInfo)
+      let res = await api_signin(info)
 
       if (res) {
         message.success('注册成功')
         state.isLogin = true
         state.loginInfo = {
-          userName: state.registerInfo.userName,
+          userName: info.userName,
           password: '',
         }
       }
     }
 
-    const handleChange = (info: UploadChangeParam) => {
-      if (info.file.status === 'uploading') {
-        state.imgLoading = true
-        return
-      }
-      if (info.file.status === 'done') {
-        state.registerInfo.avatar = info.file.response.src
-        state.imgLoading = false
-      }
-    }
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const beforeUpload = (file: UploadProps['fileList'][number]) => {
-      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
-      if (!isJpgOrPng) {
-        message.error('只能上传 JPG/PNG 格式的文件哦')
-      }
-      const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isLt2M) {
-        message.error('图片大小不能超过2M')
-      }
-      return isJpgOrPng && isLt2M
-    }
+    const { handleChange, beforeUpload, imgLoading } = useAUploadHook((response) => {
+      state.registerInfo.avatar = response.src
+    })
 
     return {
       ...toRefs(state),
+      imgLoading,
       login,
       signin,
       handleChange,

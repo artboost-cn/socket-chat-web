@@ -182,3 +182,15 @@ export interface WebRtcMsg {
   senderId: number,
   receiverId: number,
 }
+
+export interface UploadFileRes {
+  code: number,
+  src: string,
+  fileName: string,
+  msg?: string,
+  emoticonId: number,
+  size?: {
+    width: number;
+    height: number;
+  },
+}

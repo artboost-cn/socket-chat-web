@@ -9,19 +9,20 @@ export default {
     // bindings表示指令相关的信息是一个对象
     // 指令的功能：实现图片的懒加载
     // 1、监听图片进入可视区
-    const oberver = new IntersectionObserver(([{ isIntersecting }]) => {
+    const observer = new IntersectionObserver(([{ isIntersecting }]) => {
       if (isIntersecting) {
         // 进入了可视区
         // 2、给图片的src属性赋值图片的地址
         el.src = binding.value
         // 取消图片的监听
-        oberver.unobserve(el)
+        observer.unobserve(el)
         // 加载的图片失败了，显示默认的图片地址
         el.onerror = () => {
           el.src = defaultImg
         }
       }
     })
-    oberver.observe(el)
+    observer.observe(el)
+
   }
 }
