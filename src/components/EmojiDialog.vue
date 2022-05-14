@@ -18,7 +18,7 @@
         ></div>
       </div>
       <!-- <div class="emoticon-tab" v-show="currentTab === 1" v-lazy-container="{selector:'img'}"> -->
-      <div class="emoticon-tab" v-show="currentTab === 1">
+      <div class="emoticon-tab" v-show="currentTab === 1" v-lazyload>
         <a-upload
           name="file"
           list-type="picture-card"
@@ -39,7 +39,7 @@
           class="emoticon-item"
           v-for="i in emoticonList"
           :key="i.id"
-          v-lazyload="i.src"
+          :data-src="i.src"
           @dragstart.prevent
           @click="selectEmoji(1, i.src)"
         />
