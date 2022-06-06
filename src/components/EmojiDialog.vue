@@ -8,17 +8,17 @@
     "
   >
     <div class="emoji-container" v-show="showDialog">
-      <div class="emoticon-tab" v-show="currentTab === 0">
+      <div class="emoticon-tab" v-show="currentTab === 0" @click="selectEmoji($event, 0)">
+        <!-- @click="selectEmoji(0, item)" -->
         <div
           class="emoji-item"
           v-for="item in emojiNum"
-          @click="selectEmoji(0, item)"
           :key="item"
           :style="{ 'background-position': `0 ${-24 * item}px` }"
         ></div>
       </div>
       <!-- <div class="emoticon-tab" v-show="currentTab === 1" v-lazy-container="{selector:'img'}"> -->
-      <div class="emoticon-tab" v-show="currentTab === 1" v-lazyload>
+      <div class="emoticon-tab" v-show="currentTab === 1" v-lazyload @click="selectEmoji($event, 1)">
         <a-upload
           name="file"
           list-type="picture-card"
@@ -35,14 +35,7 @@
             <plus-outlined v-else></plus-outlined>
           </div>
         </a-upload>
-        <img
-          class="emoticon-item"
-          v-for="i in emoticonList"
-          :key="i.id"
-          :data-src="i.src"
-          @dragstart.prevent
-          @click="selectEmoji(1, i.src)"
-        />
+        <img class="emoticon-item" v-for="i in emoticonList" :key="i.id" :data-src="i.src" @dragstart.prevent />
       </div>
       <!-- tab-selector -->
       <div class="tab-selector">
@@ -97,7 +90,17 @@ export default defineComponent({
     // methods
     // 点击选择表情的回调
     // type: 0:emoji   1:自定义表情
-    const selectEmoji = (type: number, item: number | string) => {
+    const selectEmoji = (e: any, type: number) => {
+      let item: number | string | undefined
+      // 事件委托
+      if (type === 0) {
+        item = e.target.__vnode.key
+      } else if (type === 1) {
+        item = e.target.currentSrc
+      }
+
+      if (!item) return
+
       emit('selectEmoji', { type, item })
       state.showDialog = false
     }

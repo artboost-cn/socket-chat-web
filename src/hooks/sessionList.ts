@@ -31,7 +31,7 @@ export default function () {
   onMounted(() => {
     // 如果vuex存在数据,则去除现有的list
     if (store.state.sessionListData.list.length) {
-      store.commit('setSessionList', {
+      store.commit('setSessionListData', {
         list: [],
         isMore: false,
       })

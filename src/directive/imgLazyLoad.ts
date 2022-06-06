@@ -35,8 +35,8 @@ export default {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const img = entry.target;
-          const data_src = img.getAttribute('data-src')
-          img.setAttribute('src', data_src as string)
+          const data_src = img.getAttribute('data-src') as string
+          img.setAttribute('src', data_src)
           observe.unobserve(img)
         }
       })

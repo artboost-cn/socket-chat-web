@@ -150,6 +150,7 @@ export default defineComponent({
     const getLastLocation = () => {
       chatInput.focus()
       lastLocation = selection?.getRangeAt(0) as Range
+      // true是折叠到节点开始，false是折叠到节点结束
       lastLocation.collapse(false)
     }
 

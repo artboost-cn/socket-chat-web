@@ -3,10 +3,7 @@ import request from "@/utils/request";
 import axios from "axios";
 
 // 获取聊天记录
-export function api_getChatList(
-  params: { sessionId: string; lastTime?: number },
-  state: { [propname: string]: any }
-) {
+const api_getChatList = (params: { sessionId: string; lastTime?: number }, state: { [propname: string]: any }) => {
   return request.get("/chats/get_chat_list", {
     params,
     cancelToken: new axios.CancelToken(function executor(c) {
@@ -24,3 +21,7 @@ type getChatListType = {
 // export type getChatListType = {
 
 // }
+
+export {
+  api_getChatList
+}

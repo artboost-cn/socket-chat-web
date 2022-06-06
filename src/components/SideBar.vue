@@ -41,7 +41,6 @@
 
 <script lang="ts">
 import addFriendModal from './addFriendModal.vue'
-import useSessionList from '@/hooks/sessionList'
 import MoreMenu from './MoreMenu.vue'
 import { reactive, toRefs } from '@vue/reactivity'
 import { useStore } from 'vuex'
@@ -64,7 +63,6 @@ export default defineComponent({
         { icon: 'icon-wenjianjia', path: '/file', name: 'File' },
       ],
     })
-    useSessionList()
 
     return {
       ...toRefs(state),

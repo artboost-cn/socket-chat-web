@@ -4,7 +4,7 @@ import request from '@/utils/request'
 
 // 获取会话列表数据
 // export function api_getSessionList(params, that) {
-export function api_getSessionList(params: { lastTime?: string }) {
+const api_getSessionList = (params: { lastTime?: string }) => {
   return request.get('/sessions/get_session_list', { params }) as unknown as getSessionListType
 }
 
@@ -18,3 +18,8 @@ type getSessionListType = {
 // export function api_resetUnread(params) {
 //   return request.get('/sessions/reset_unread', { params })
 // }
+
+
+export {
+  api_getSessionList,
+}

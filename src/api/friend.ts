@@ -2,7 +2,7 @@ import { Friend, User } from '@/type'
 import request from '@/utils/request'
 
 // 添加好友
-export function api_addFriend(params: { requestId: number }) {
+const api_addFriend = (params: { requestId: number }) => {
   return request.get('/friends/add_friend', { params }) as unknown as addFriendType
 }
 
@@ -12,7 +12,7 @@ type addFriendType = {
 }
 
 // 获取好友列表
-export function api_getFriendList() {
+const api_getFriendList = () => {
   return request.get('/friends/get_friend_list') as unknown as getFriendListType
 }
 
@@ -22,11 +22,17 @@ type getFriendListType = {
 }
 
 // 删除好友
-export function api_deleteFriend(params: { friendId: number }) {
+const api_deleteFriend = (params: { friendId: number }) => {
   return request.get('/friends/delete_friend', { params }) as unknown as deleteFriendType
 }
 
 type deleteFriendType = {
   code: number,
   msg: string,
+}
+
+export {
+  api_addFriend,
+  api_getFriendList,
+  api_deleteFriend,
 }
