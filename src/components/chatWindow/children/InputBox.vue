@@ -30,29 +30,26 @@
 </template>
 
 <script lang="ts">
-import { guid } from '@/utils/utils'
-import ChatInput from '@/components/ChatInput.vue'
-import EmojiDialog from '@/components/EmojiDialog.vue'
-import UploadCmp from '@/components/UploadCmp.vue'
+import { guid } from '@/utils/utils';
+import ChatInput from '@/components/ChatInput.vue';
+import EmojiDialog from '@/components/EmojiDialog.vue';
+import UploadCmp from '@/components/UploadCmp.vue';
 
-import Pubsub from 'pubsub-js'
-import { useStore } from 'vuex'
-import { message } from 'ant-design-vue'
-import { ComponentInternalInstance, getCurrentInstance } from 'vue'
+import Pubsub from 'pubsub-js';
+import { useStore } from 'vuex';
+import { message } from 'ant-design-vue';
+import { ComponentInternalInstance, getCurrentInstance } from 'vue';
 
-import { FileInfo, InputChatItem } from '@/type'
+import { FileInfo, InputChatItem } from '@/type';
 
-import useWebRtc from '@/hooks/webrtc'
-
-// 最大呼叫时间
-const MAXCALLTIME = 15
+import useWebRtc from '@/hooks/webrtc';
 
 export default {
   components: { ChatInput, EmojiDialog, UploadCmp },
   name: 'input-box',
   setup() {
-    const store = useStore()
-    const { proxy } = getCurrentInstance() as ComponentInternalInstance
+    const store = useStore();
+    const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
     // methods
     // 发送消息的回调
@@ -65,62 +62,67 @@ export default {
         type,
         sessionId: store.state.currentSession.sessionId,
         fileInfo,
-      }
-      store.state.socket?.emit('chat', chatItem)
+      };
+      store.state.socket?.emit('chat', chatItem);
 
-      chatItem['senderId'] = store.state.userInfo.id
-      chatItem['status'] = 'loading'
-      chatItem['updatedAt'] = new Date().getTime()
+      // chatItem['senderId'] = store.state.userInfo.id;
+      // chatItem['status'] = 'loading';
+      // chatItem['updatedAt'] = new Date().getTime();
+      // if (type == 1 || type == 2) {
+      //   chatItem['content'] = window.URL.createObjectURL(content as File);
+      //   // 用于重发
+      //   chatItem['file'] = content as File;
+      // }
+      let temp: InputChatItem = {
+        ...chatItem,
+        senderId: store.state.userInfo.id,
+        status: 'loading',
+        updatedAt: new Date().getTime(),
+      };
       if (type == 1 || type == 2) {
-        chatItem['content'] = window.URL.createObjectURL(content as File)
+        // 本地展示的是blob文件
+        temp['content'] = window.URL.createObjectURL(content as File);
         // 用于重发
-        chatItem['file'] = content as File
+        temp['file'] = content as File;
       }
-      Pubsub.publish('sendMsg', chatItem)
-    }
+      Pubsub.publish('sendMsg', chatItem);
+    };
 
     // 选择表情的回调
     const selectEmoji = ({ type, item }: { type: number; item: number | string }) => {
       if (type === 0) {
-        proxy && (proxy.$refs.chatInput as typeof ChatInput).addEmoji(item)
+        proxy && (proxy.$refs.chatInput as typeof ChatInput).addEmoji(item);
       } else if (type === 1) {
-        sendMsg(item.toString(), 3)
+        sendMsg(item.toString(), 3);
       }
-    }
+    };
 
     // 拖动drop文件的回调
     const dropFile = (e: InputEvent) => {
       // let file = e.dataTransfer?.files[0]
-      let file = e.dataTransfer && e.dataTransfer.files[0]
-      file && uploadFile(file)
-    }
+      let file = e.dataTransfer && e.dataTransfer.files[0];
+      file && uploadFile(file);
+    };
 
     // 上传文件
     const uploadFile = (file: File) => {
       if (file.size > 2 * 1024 * 1024) {
-        message.warn('上传的文件不能超过 2M 哦')
-        return
+        message.warn('上传的文件不能超过 2M 哦');
+        return;
       }
-      let type = /image\/png|image\/jpeg|image\/gif/.test(file.type) ? 1 : 2
+      let type = /image\/png|image\/jpeg|image\/gif/.test(file.type) ? 1 : 2;
 
       sendMsg(file, type, {
         fileName: file.name,
         size: file.size,
-      })
-    }
+      });
+    };
 
     const videoHandler = () => {
       // 发送视频邀请
-      sendMsg('[视频通话]', 5)
-      useWebRtc({ mode: 'sender', type: ['videoCall'] })
-      setTimeout(() => {
-        if (store.state.pc?.iceConnectionState === 'new') {
-          // new说明还没有进入连接状态   自动挂断
-          message.info('通话暂时无人接听哦!')
-          store.state.pc.hangup()
-        }
-      }, MAXCALLTIME * 1000)
-    }
+      sendMsg('[视频通话]', 5);
+      useWebRtc({ mode: 'sender', type: ['videoCall'] });
+    };
 
     return {
       sendMsg,
@@ -130,9 +132,9 @@ export default {
       proxy,
       videoHandler,
       message,
-    }
+    };
   },
-}
+};
 </script>
 
 <style scoped>
