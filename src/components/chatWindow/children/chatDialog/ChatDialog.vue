@@ -5,7 +5,7 @@
       listenHeight
       ref="scrollBox"
       :topDisabled="topDisabled"
-      @touchTop="getChatList(chatList[0].updatedAt)"
+      @touchTop="getChatList(Number(chatList[0].updatedAt))"
     >
       <loading v-if="!topDisabled && chatList.length >= 30"></loading>
       <component
@@ -105,17 +105,7 @@ export default defineComponent({
       let res = await api_getChatList({ sessionId: store.state.currentSession.sessionId, lastTime }, state);
       if (res) {
         let arr = insertTimeTag(res.list);
-
-        if (!lastTime) {
-          state.chatList.unshift(...arr);
-          // 没传时间，则是第一次获取聊天记录，滚动到底部
-          scrollToFunc('instant');
-        } else {
-          scrollBox &&
-            scrollBox.keepHeight(() => {
-              state.chatList.unshift(...arr);
-            });
-        }
+        insertChatList(!lastTime, arr);
 
         // 聊天记录一次请求30条，小于30条说明没有更多聊天数据了
         state.topDisabled = arr.length < 30;
@@ -123,11 +113,24 @@ export default defineComponent({
       }
     };
 
+    // 插入聊天的方法
+    const insertChatList = (init: boolean, arr: (ChatItem | TimeTag)[]) => {
+      if (init) {
+        state.chatList.unshift(...arr);
+        scrollToFunc('instant');
+      } else {
+        scrollBox &&
+          scrollBox.keepHeight(() => {
+            state.chatList.unshift(...arr);
+          });
+      }
+    };
+
     // 输入框发送消息的回调
     const sendMsg = (name: string, chatItem: ChatItem) => {
       let list = state.chatList;
-      let timeTag = timeTagFunc && timeTagFunc(chatItem, list[list.length - 1] as ChatItem);
-      if (timeTag) list.push(timeTag);
+      let timeTag = timeTagFunc && timeTagFunc(chatItem, list.at(-1) as ChatItem);
+      timeTag && list.push(timeTag);
       chatItem.component = 'user-item';
       list.push(chatItem);
       // 自己发消息，直接滚到底部
@@ -144,11 +147,11 @@ export default defineComponent({
       let list = state.chatList;
       // 先判断是否是当前会话
       if (msg.sessionId !== store.state.currentSession.sessionId) return;
+      let timeTag = timeTagFunc && timeTagFunc(msg, list.at(-1) as ChatItem | ReceiveMsg);
+      timeTag && list.push(timeTag);
       if (msg.type == 4) {
         msg.component = 'notification-tag';
       } else {
-        let timeTag = timeTagFunc && timeTagFunc(msg, list[list.length - 1] as ChatItem | ReceiveMsg);
-        if (timeTag) list.push(timeTag);
         msg.component = msg.talkerId == store.state.currentSession.receiverId ? 'talker-item' : 'user-item';
       }
       list.push(msg);
@@ -166,7 +169,6 @@ export default defineComponent({
           // this.chatList[i] = msg
           item.updatedAt = msg.updatedAt;
           item.status = 'success';
-          // console.log(this.chatList[i]);
           if (item.type === 1) {
             item.content = msg.content;
           }
@@ -199,7 +201,7 @@ export default defineComponent({
       });
     };
 
-    // 根据消息时间插入时间节点标签
+    // 请求获取的聊天记录中插入 Tag
     const insertTimeTag = (chatList: ChatItem[]) => {
       let arr: (ChatItem | TimeTag)[] = [];
       let userId = store.state.userInfo.id;
@@ -219,11 +221,7 @@ export default defineComponent({
           }
         } else {
           // 其它类型信息
-          if (item.senderId == userId) {
-            item['component'] = 'user-item';
-          } else {
-            item['component'] = 'talker-item';
-          }
+          item['component'] = item.senderId == userId ? 'user-item' : 'talker-item';
         }
         arr.unshift(item);
 

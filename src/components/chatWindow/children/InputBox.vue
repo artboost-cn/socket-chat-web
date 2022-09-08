@@ -62,6 +62,8 @@ export default {
         type,
         sessionId: store.state.currentSession.sessionId,
         fileInfo,
+        // 临时时间戳，在信息发送成功后会改为发送成功的时间
+        updatedAt: new Date().getTime(),
       };
       store.state.socket?.emit('chat', chatItem);
 
