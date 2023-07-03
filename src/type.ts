@@ -6,6 +6,7 @@ export interface Subscribe {
 
 export interface TimeTag {
   content: string;
+  displayedContent: string;
   component: string;
   updatedAt: string,
 }
@@ -13,6 +14,7 @@ export interface TimeTag {
 // 双方的聊天记录，以及发送方当前发送的消息都是chatItem类型
 export interface ChatItem {
   content: string,
+  displayedContent: string,
   others: { [propname: string]: any },
   receiverId: number,
   senderId: number,
@@ -60,6 +62,7 @@ export interface FailMsg {
 
 export interface ReceiveMsg {
   content: string,
+  displayedContent: string,
   updatedAt: string,
   sessionId: string,
   talkerId: string,

@@ -60,9 +60,11 @@ export default defineComponent({
       content: computed(() => transToTag(props.chat.content)),
       imgStyle: computed(() => {
         // 如果是blob开头, 说明是刚发送的图片
-        if (/^blob:/.test(props.chat.content)) return ''
+        if (typeof props.chat.content !== 'string') return ''
         let reg = /\??size=([0-9]{1,3}x[0-9]{1,3})&?/
-        let arr = (props.chat.content.match(reg) as RegExpMatchArray)[1].split('x')
+        let matchResult = props.chat.content.match(reg)
+        if (!matchResult) return ''
+        let arr = matchResult[1].split('x')
         return `width:${arr[0]}px;height:${arr[1]}px;`
       }),
       fileInfo: computed(() => {

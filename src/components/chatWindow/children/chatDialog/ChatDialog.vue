@@ -128,6 +128,7 @@ export default defineComponent({
 
     // 输入框发送消息的回调
     const sendMsg = (name: string, chatItem: ChatItem) => {
+      console.log(chatItem)
       let list = state.chatList;
       let timeTag = timeTagFunc && timeTagFunc(chatItem, list.at(-1) as ChatItem);
       timeTag && list.push(timeTag);
@@ -154,11 +155,23 @@ export default defineComponent({
       } else {
         msg.component = msg.talkerId == store.state.currentSession.receiverId ? 'talker-item' : 'user-item';
       }
+      msg.displayedContent = ''
       list.push(msg);
+      displayMessage(list.length - 1, msg.content);
       // 判断当前是否离底，再进行滚动, 100表示100px内都是触底范围
       scrollBox && scrollBox.getIsBottom(100) && scrollToFunc();
     };
 
+    const displayMessage = (index: number, content: string) => {
+      let message = state.chatList[index];
+      let currentLength = message.displayedContent.length;
+      if (currentLength < content.length) {
+        message.displayedContent += content.charAt(currentLength);
+        setTimeout(() => {
+          displayMessage(index, content);
+        }, 100); // 每隔100毫秒添加一个字符
+      }
+    }
     // 消息发送成功后的回调
     const sendMsgSuccess = (name: string, msg: SuccessMsg) => {
       let list = state.chatList;
@@ -170,6 +183,7 @@ export default defineComponent({
           item.updatedAt = msg.updatedAt;
           item.status = 'success';
           if (item.type === 1) {
+            
             item.content = msg.content;
           }
           break;
@@ -251,7 +265,7 @@ export default defineComponent({
           else if (updatedAt_item1 > thisWeek) time = moment(updatedAt_item1).locale('zh-cn').format('dddd HH:mm');
           else time = moment(updatedAt_item1).format('YYYY年MM月DD日 HH:mm');
 
-          return { content: time, component: 'notification-tag', updatedAt: updatedAt_item1.toString() };
+          return { content: time, displayedContent: '', component: 'notification-tag', updatedAt: updatedAt_item1.toString() };
         }
       };
     };
@@ -272,6 +286,7 @@ export default defineComponent({
     return {
       ...toRefs(state),
       getChatList,
+      displayMessage,
       message,
     };
   },

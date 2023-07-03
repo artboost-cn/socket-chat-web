@@ -6,8 +6,10 @@
         <span class="user-name">{{ userInfo?.userName }}</span>
         <span class="time">{{ chat?.updatedAt }}</span>
       </div>
+<!--      {{JSON.stringify(chat)}}-->
       <div class="message-container" v-if="chat?.type == 0">
-        <pre class="message" v-html="content"></pre>
+        <pre class="message" v-html="chat.displayedContent" v-if="chat.displayedContent"></pre>
+        <pre class="message" v-html="content" v-else></pre>
       </div>
       <div
         class="image"
