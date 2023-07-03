@@ -227,6 +227,7 @@ export default defineComponent({
   border: 1px solid #eee;
   object-fit: cover;
   width: 100%;
+  height: 100%;
   cursor: pointer;
   background-color: #fff;
 }
