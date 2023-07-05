@@ -11,13 +11,13 @@
         <upload-cmp @uploadFile="uploadFile" style="display: inline-block">
           <i class="iconfont icon-wenjianjiawenjianguanli"></i>
         </upload-cmp>
-        <a-tooltip placement="topLeft">
-          <template #title>
-            <span :style="{ color: 'white' }">点对点私密聊天, 聊天信息将不会经过服务器, 且不会被保存</span>
-          </template>
-          <i class="iconfont icon-jiami" @click="message.info('私密聊天正在火速开发中哦!')"></i>
-        </a-tooltip>
-        <i class="iconfont icon-shipin" @click="videoHandler"></i>
+<!--        <a-tooltip placement="topLeft">-->
+<!--          <template #title>-->
+<!--            <span :style="{ color: 'white' }">点对点私密聊天, 聊天信息将不会经过服务器, 且不会被保存</span>-->
+<!--          </template>-->
+<!--          <i class="iconfont icon-jiami" @click="message.info('私密聊天正在火速开发中哦!')"></i>-->
+<!--        </a-tooltip>-->
+<!--        <i class="iconfont icon-shipin" @click="videoHandler"></i>-->
       </div>
     </div>
     <!-- chat-input -->

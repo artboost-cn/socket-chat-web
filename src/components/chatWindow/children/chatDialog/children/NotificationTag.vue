@@ -1,6 +1,6 @@
 <template>
   <div class="time-tag">
-    <span>{{ content }}</span>
+<!--    <span>{{ content }}</span>-->
   </div>
 </template>
 

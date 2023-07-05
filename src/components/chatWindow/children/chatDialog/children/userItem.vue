@@ -154,7 +154,13 @@ export default defineComponent({
   /*justify-content: flex-end;*/
   margin: 15px 0;
 }
-
+.user-item .item-left-container,.user-item .item-left,.user-item .item-left div {
+  width: 100%;
+}
+.item-left {
+  border-radius: 4px;
+  border: 1px solid #fdba74;
+}
 .avatar {
   margin-left: 10px;
   width: 36px;
@@ -174,7 +180,7 @@ export default defineComponent({
   position: relative;
   /* background-color: #9eea6a; */
   background-color: #fff7ed;
-  border: 1px solid #fdba74;
+  /*border: 1px solid #fdba74;*/
   border-radius: 4px;
 }
 
@@ -236,6 +242,7 @@ export default defineComponent({
 .item-left > div,
 .avatar {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+  /*border: 1px solid #fdba74;*/
 }
 
 .item-left-container {

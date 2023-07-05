@@ -301,8 +301,9 @@ type State = {
 
 <style scoped>
 .chat-dialog {
-  background: url('@/assets/img/chat_background.png') 0 0 no-repeat;
-  background-size: 100%;
+  /*background: url('@/assets/img/chat_background.png') 0 0 no-repeat;*/
+  /*background-size: 100%;*/
+  background: #fff;
 }
 
 .scroll-box {

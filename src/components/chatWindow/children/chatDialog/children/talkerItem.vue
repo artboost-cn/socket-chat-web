@@ -116,7 +116,14 @@ interface State {
   justify-content: flex-start;
   margin: 15px 0;
 }
-
+.talker-item div {
+  width: 100%;
+}
+.item-right {
+  background-color: #f9fafb;
+  border-radius: 4px;
+  border: 1px solid #eee;
+}
 .avatar {
   margin-right: 10px;
   width: 36px;
@@ -134,9 +141,9 @@ interface State {
 
 .message-container {
   position: relative;
-  background-color: #f9fafb;
-  border-radius: 4px;
-  border: 1px solid #eee;
+  /*background-color: #f9fafb;*/
+  /*border-radius: 4px;*/
+  /*border: 1px solid #eee;*/
 }
 
 .message {
