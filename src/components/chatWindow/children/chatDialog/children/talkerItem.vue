@@ -60,7 +60,7 @@ export default defineComponent({
         if (/^blob:/.test(props.chat.content)) return ''
         let reg = /\??size=([0-9]{1,3}x[0-9]{1,3})&?/
         let arr = props.chat.content.match(reg)[1].split('x')
-        return `width:${arr[0]}px;height:${arr[1]}px;`
+        return `width:${arr[0]}px;`
       }),
       fileInfo: computed(() => {
         if (/^blob:/.test(props.chat.content)) return props.chat.fileInfo
