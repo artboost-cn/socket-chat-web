@@ -1,6 +1,6 @@
 <template>
   <div class="talker-item">
-    <div class="avatar"><img :src="userInfo?.avatar" alt="" /></div>
+<!--    <div class="avatar"><img :src="userInfo?.avatar" alt="" /></div>-->
     <div class="item-right">
       <div class="item-right-top" v-if="chat?.sort === 1">
         <span class="user-name">{{ userInfo?.userName }}</span>
@@ -134,7 +134,7 @@ interface State {
 
 .message-container {
   position: relative;
-  background-color: #ffffff;
+  background-color: #f9fafb;
   border-radius: 4px;
   border: 1px solid #eee;
 }
@@ -155,16 +155,16 @@ interface State {
 }
 
 .message-container::before {
-  content: '';
-  position: absolute;
-  left: -3px;
-  top: 7px;
-  height: 4px;
-  width: 4px;
-  transform: rotateZ(-45deg);
-  background-color: inherit;
-  border-top: 1px solid #eee;
-  border-left: 1px solid #eee;
+  /*content: '';*/
+  /*position: absolute;*/
+  /*left: -3px;*/
+  /*top: 7px;*/
+  /*height: 4px;*/
+  /*width: 4px;*/
+  /*transform: rotateZ(-45deg);*/
+  /*background-color: inherit;*/
+  /*border-top: 1px solid #eee;*/
+  /*border-left: 1px solid #eee;*/
 }
 
 .message-container:hover {

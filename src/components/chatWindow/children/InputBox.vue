@@ -3,14 +3,14 @@
     <!-- function-bar -->
     <div class="function-bar">
       <div class="bar-left">
-        <emoji-dialog @selectEmoji="selectEmoji">
-          <i class="iconfont icon-biaoqing-xue"></i>
-        </emoji-dialog>
-        <upload-cmp @uploadFile="uploadFile">
-          <i class="iconfont icon-wenjianjiawenjianguanli"></i>
-        </upload-cmp>
+<!--        <emoji-dialog @selectEmoji="selectEmoji">-->
+<!--          <i class="iconfont icon-biaoqing-xue"></i>-->
+<!--        </emoji-dialog>-->
       </div>
       <div class="bar-right">
+        <upload-cmp @uploadFile="uploadFile" style="display: inline-block">
+          <i class="iconfont icon-wenjianjiawenjianguanli"></i>
+        </upload-cmp>
         <a-tooltip placement="topLeft">
           <template #title>
             <span :style="{ color: 'white' }">点对点私密聊天, 聊天信息将不会经过服务器, 且不会被保存</span>
@@ -32,7 +32,7 @@
 <script lang="ts">
 import { guid } from '@/utils/utils';
 import ChatInput from '@/components/ChatInput.vue';
-import EmojiDialog from '@/components/EmojiDialog.vue';
+// import EmojiDialog from '@/components/EmojiDialog.vue';
 import UploadCmp from '@/components/UploadCmp.vue';
 
 import Pubsub from 'pubsub-js';
@@ -45,7 +45,7 @@ import { FileInfo, InputChatItem } from '@/type';
 import useWebRtc from '@/hooks/webrtc';
 
 export default {
-  components: { ChatInput, EmojiDialog, UploadCmp },
+  components: { ChatInput, UploadCmp },
   name: 'input-box',
   setup() {
     const store = useStore();

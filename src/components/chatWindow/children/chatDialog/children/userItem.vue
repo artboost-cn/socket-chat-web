@@ -28,7 +28,7 @@
         </div>
       </div>
     </div>
-    <div class="avatar"><img :src="store.state.userInfo.avatar" alt="" /></div>
+<!--    <div class="avatar"><img :src="store.state.userInfo.avatar" alt="" /></div>-->
   </div>
 </template>
 
@@ -151,7 +151,7 @@ export default defineComponent({
 <style scoped>
 .user-item {
   display: flex;
-  justify-content: flex-end;
+  /*justify-content: flex-end;*/
   margin: 15px 0;
 }
 
@@ -173,7 +173,8 @@ export default defineComponent({
 .message-container {
   position: relative;
   /* background-color: #9eea6a; */
-  background-color: #3fa7e4;
+  background-color: #fff7ed;
+  border: 1px solid #fdba74;
   border-radius: 4px;
 }
 
@@ -192,18 +193,18 @@ export default defineComponent({
   white-space: pre-wrap;
   text-align: left;
   margin: 0;
-  color: rgba(255, 255, 255, 0.9);
+  color: #18191C;
 }
 
 .message-container::after {
-  content: '';
-  position: absolute;
-  right: -2px;
-  top: 7px;
-  height: 4px;
-  width: 4px;
-  transform: rotateZ(45deg);
-  background-color: inherit;
+  /*content: '';*/
+  /*position: absolute;*/
+  /*right: -2px;*/
+  /*top: 7px;*/
+  /*height: 4px;*/
+  /*width: 4px;*/
+  /*transform: rotateZ(45deg);*/
+  /*background-color: inherit;*/
 }
 
 .message-container:hover {
