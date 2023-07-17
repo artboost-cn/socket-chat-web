@@ -17,7 +17,7 @@
                 @click.right.prevent="rightClickPic($event, chat.content)"
         >
           <div v-show="chat.imageLoaded" class="loading">
-            <img src="" />
+            <img src="../../../../../assets/img/img4.png" />
             正在为您生成，请耐心等待...
           </div>
           <img v-show="!chat.imageLoaded" :src="chat.content" alt="" @dragstart.prevent @click.stop="checkImg" />
