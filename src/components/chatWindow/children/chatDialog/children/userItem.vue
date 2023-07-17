@@ -11,14 +11,14 @@
           <pre class="message" v-html="content"></pre>
         </div>
         <!-- 图片信息 -->
-        <div
-          class="image"
-          v-else-if="chat.type == 1 || chat.type == 3"
-          @click.right.prevent="rightClickPic($event, chat)"
-          :style="imgStyle"
-        >
-          <!-- <img :src="chat.content" alt="" @dragstart.prevent @click.stop="(e)=>{$bus.$emit('viewPicture', e.target)}"> -->
-          <img :src="chat.content" alt="" @dragstart.prevent @click.stop="checkImg" />
+        <div class="message" v-else-if="chat.type == 1 || chat.type == 3">
+          <div
+                  class="image"
+                  @click.right.prevent="rightClickPic($event, chat)"
+          >
+            <!-- <img :src="chat.content" alt="" @dragstart.prevent @click.stop="(e)=>{$bus.$emit('viewPicture', e.target)}"> -->
+            <img :src="chat.content" alt="" @dragstart.prevent @click.stop="checkImg" />
+          </div>
         </div>
         <!-- 文件信息 -->
         <download-card v-else-if="chat.type == 2" :file="chat.content" :fileInfo="fileInfo"></download-card>
@@ -151,15 +151,12 @@ export default defineComponent({
 <style scoped>
 .user-item {
   display: flex;
-  /*justify-content: flex-end;*/
+  justify-content: flex-end;
   margin: 15px 0;
-}
-.user-item .item-left-container,.user-item .item-left,.user-item .item-left div {
-  width: 100%;
 }
 .item-left {
   border-radius: 4px;
-  border: 1px solid #fdba74;
+  /*border: 1px solid #fdba74;*/
 }
 .avatar {
   margin-left: 10px;
@@ -179,7 +176,7 @@ export default defineComponent({
 .message-container {
   position: relative;
   /* background-color: #9eea6a; */
-  background-color: #fff7ed;
+  background-color: #56CCF2;
   /*border: 1px solid #fdba74;*/
   border-radius: 4px;
 }
@@ -233,8 +230,8 @@ export default defineComponent({
   border-radius: 5px;
   border: 1px solid #eee;
   object-fit: cover;
-  width: 100%;
-  height: 100%;
+  /*width: 100%;*/
+  /*height: 100%;*/
   cursor: pointer;
   background-color: #fff;
 }

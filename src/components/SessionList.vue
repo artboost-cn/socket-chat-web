@@ -136,10 +136,12 @@ export default defineComponent({
 .session-list {
   width: 250px;
   /* background-color: #e6e5e5; */
-  background-color: #fff;
+  /*background-color: #fff;*/
   text-align: left;
-  border-right: 1px solid #ddd;
+  /*border-right: 1px solid #ddd;*/
+  margin-top: 25px;
 }
+
 
 .session-top {
   display: flex;

@@ -156,8 +156,10 @@ export default defineComponent({
         msg.component = msg.talkerId == store.state.currentSession.receiverId ? 'talker-item' : 'user-item';
       }
       msg.displayedContent = ''
+      msg.imageLoaded = true
       list.push(msg);
       displayMessage(list.length - 1, msg.content);
+      setImageLoaded(list.length - 1, msg.imageLoaded);
       // 判断当前是否离底，再进行滚动, 100表示100px内都是触底范围
       scrollBox && scrollBox.getIsBottom(100) && scrollToFunc();
     };
@@ -171,6 +173,12 @@ export default defineComponent({
           displayMessage(index, content);
         }, 100); // 每隔100毫秒添加一个字符
       }
+    }
+    const setImageLoaded = (index: number, imageLoaded: boolean) => {
+      let message = state.chatList[index];
+      setTimeout(() => {
+        message.imageLoaded = false;
+      }, 1000)
     }
     // 消息发送成功后的回调
     const sendMsgSuccess = (name: string, msg: SuccessMsg) => {
@@ -265,7 +273,7 @@ export default defineComponent({
           else if (updatedAt_item1 > thisWeek) time = moment(updatedAt_item1).locale('zh-cn').format('dddd HH:mm');
           else time = moment(updatedAt_item1).format('YYYY年MM月DD日 HH:mm');
 
-          return { content: time, displayedContent: '', component: 'notification-tag', updatedAt: updatedAt_item1.toString() };
+          return { content: time, displayedContent: '', imageLoaded: true, component: 'notification-tag', updatedAt: updatedAt_item1.toString() };
         }
       };
     };
@@ -287,6 +295,7 @@ export default defineComponent({
       ...toRefs(state),
       getChatList,
       displayMessage,
+      setImageLoaded,
       message,
     };
   },
@@ -303,12 +312,14 @@ type State = {
 .chat-dialog {
   /*background: url('@/assets/img/chat_background.png') 0 0 no-repeat;*/
   /*background-size: 100%;*/
-  background: #fff;
 }
 
 .scroll-box {
-  height: calc(100vh - 228.5px);
+  height: calc(100vh - 320px);
   overflow-y: scroll;
+  margin: 0 25px;
   padding: 0 25px;
+  background: #F1F1F1;
+  border-radius: 12px 12px 0 0;
 }
 </style>

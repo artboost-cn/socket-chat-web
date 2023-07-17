@@ -142,9 +142,11 @@ export default {
 <style scoped>
 .input-box {
   /* background-color: #f5f5f5; */
-  background-color: #f9f9f9;
+  background-color: #F1F1F1;
   transition: 0.1s all ease;
-  border-top: 1px solid rgb(233, 233, 233);
+  margin: 8px 25px;
+  border-radius: 0 0 12px 12px;
+  /*border-top: 1px solid rgb(233, 233, 233);*/
 }
 
 .input-box:focus-within {
@@ -157,6 +159,7 @@ export default {
   display: flex;
   justify-content: space-between;
   padding: 2px 15px;
+  background: #F1F1F1;
 }
 
 .bar-left {
@@ -184,16 +187,21 @@ export default {
 
 .bottom-bar {
   text-align: right;
-  padding: 3px 22px;
+  padding: 3px 22px 8px;
+  background: #F1F1F1;
 }
 
 .send {
   display: inline-block;
+  width: 180px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
   padding: 3px 14px;
-  background: #f5f5f5;
-  color: rgb(110, 110, 110);
+  background: #1A1A1D;
+  color: #fff;
   font-size: 13px;
-  border-radius: 3px;
+  border-radius: 12px;
   transition: 0.1s all ease;
   cursor: pointer;
   border: 1px solid #e0e0e0;

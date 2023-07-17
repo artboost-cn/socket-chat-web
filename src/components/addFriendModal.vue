@@ -84,6 +84,7 @@ input:focus {
 
 .input-container {
   margin: 10px;
+  background: #F1F1F1;
 }
 
 .input-container span {

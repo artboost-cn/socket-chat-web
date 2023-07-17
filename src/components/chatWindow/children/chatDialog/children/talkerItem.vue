@@ -11,13 +11,17 @@
         <pre class="message" v-html="chat.displayedContent" v-if="chat.displayedContent"></pre>
         <pre class="message" v-html="content" v-else></pre>
       </div>
-      <div
-        class="image"
-        v-else-if="chat.type == 1 || chat.type == 3"
-        @click.right.prevent="rightClickPic($event, chat.content)"
-        :style="imgStyle"
-      >
-        <img :src="chat.content" alt="" @dragstart.prevent @click.stop="checkImg" />
+      <div class="message" v-else-if="chat.type == 1 || chat.type == 3">
+        <div
+                class="image"
+                @click.right.prevent="rightClickPic($event, chat.content)"
+        >
+          <div v-show="chat.imageLoaded" class="loading">
+            <img src="" />
+            正在为您生成，请耐心等待...
+          </div>
+          <img v-show="!chat.imageLoaded" :src="chat.content" alt="" @dragstart.prevent @click.stop="checkImg" />
+        </div>
       </div>
       <download-card v-else-if="chat.type == 2" :file="chat.content" :fileInfo="fileInfo"></download-card>
       <div class="message-container message" v-if="chat.type == 5">
@@ -116,9 +120,6 @@ interface State {
   justify-content: flex-start;
   margin: 15px 0;
 }
-.talker-item div {
-  width: 100%;
-}
 .item-right {
   background-color: #f9fafb;
   border-radius: 4px;
@@ -186,8 +187,8 @@ interface State {
   border-radius: 5px;
   border: 1px solid #eee;
   object-fit: cover;
-  width: 100%;
-  height: 100%;
+  /*width: 100%;*/
+  /*height: 100%;*/
   cursor: pointer;
   background-color: #fff;
 }

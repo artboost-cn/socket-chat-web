@@ -7,6 +7,7 @@ export interface Subscribe {
 export interface TimeTag {
   content: string;
   displayedContent: string;
+  imageLoaded: boolean;
   component: string;
   updatedAt: string,
 }
@@ -15,6 +16,7 @@ export interface TimeTag {
 export interface ChatItem {
   content: string,
   displayedContent: string,
+  imageLoaded: boolean,
   others: { [propname: string]: any },
   receiverId: number,
   senderId: number,
@@ -63,6 +65,7 @@ export interface FailMsg {
 export interface ReceiveMsg {
   content: string,
   displayedContent: string,
+  imageLoaded: boolean,
   updatedAt: string,
   sessionId: string,
   talkerId: string,

@@ -41,8 +41,11 @@ export default defineComponent({
 <style lang="less" scoped>
 .chat-window {
   /* background-color: #f5f5f5; */
-  background-color: #f9f9f9;
+  /*background-color: #f9f9f9;*/
   display: flex;
+  background: #FFFFFF;
+  border-radius: 20px;
+  margin: 25px;
 }
 
 .chat-area,

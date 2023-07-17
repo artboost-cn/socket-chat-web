@@ -23,7 +23,7 @@
     align-items: center;
     justify-content: space-between;
     height: 55px;
-    border-bottom: 1px solid #ddd;
+    /*border-bottom: 1px solid #ddd;*/
     padding: 0 27px;
   }
 

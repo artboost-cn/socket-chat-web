@@ -193,6 +193,7 @@ export default defineComponent({
   overflow-y: scroll;
   line-height: 20px;
   padding: 0 22px;
+  background: #F1F1F1;
 }
 
 .chat-input::selection {
