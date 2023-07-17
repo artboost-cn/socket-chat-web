@@ -19,7 +19,7 @@
           <div v-show="chat.imageLoaded" class="loading">
             <div style="position:relative;">
               <img src="../../../../../assets/img/img4.png" />
-              <div class="progress" :style="{'width': `${chat.progress}%`}"></div>
+              <div class="progress" :style="{'width': `${chat.progress <= 100 ? chat.progress : 100}%`}"></div>
             </div>
             正在为您生成，请耐心等待...
         </div>

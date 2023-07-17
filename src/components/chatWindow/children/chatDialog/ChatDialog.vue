@@ -178,7 +178,7 @@ export default defineComponent({
     const setImageLoaded = (index: number, imageLoaded: boolean) => {
       let message = state.chatList[index];
       let interval = 8; // 时间间隔，单位为秒
-      let step = 100 / (interval * 1000 / 2000); // 进度增加的步长
+      let step = 100 / (Math.floor(Math.random() * 10) + 1 * 1000 / 2000); // 进度增加的步长
       console.log(message.progress)
 
       if (message.progress < 100) {
