@@ -17,9 +17,12 @@
                 @click.right.prevent="rightClickPic($event, chat.content)"
         >
           <div v-show="chat.imageLoaded" class="loading">
-            <img src="../../../../../assets/img/img4.png" />
+            <div style="position:relative;">
+              <img src="../../../../../assets/img/img4.png" />
+              <div class="progress" :style="{'width': `${chat.progress}%`}"></div>
+            </div>
             正在为您生成，请耐心等待...
-          </div>
+        </div>
           <img v-show="!chat.imageLoaded" :src="chat.content" alt="" @dragstart.prevent @click.stop="checkImg" />
         </div>
       </div>
@@ -200,5 +203,18 @@ interface State {
 .icon-shipin {
   color: #18191c;
   margin-right: 5px;
+}
+.loading {
+  display: flex;
+  align-items: center;
+}
+.progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100px;
+  background-color: rgba(0, 0, 0, .1);
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
 }
 </style>

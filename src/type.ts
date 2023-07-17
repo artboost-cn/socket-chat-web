@@ -8,6 +8,7 @@ export interface TimeTag {
   content: string;
   displayedContent: string;
   imageLoaded: boolean;
+  progress: number;
   component: string;
   updatedAt: string,
 }
@@ -17,6 +18,7 @@ export interface ChatItem {
   content: string,
   displayedContent: string,
   imageLoaded: boolean,
+  progress: number,
   others: { [propname: string]: any },
   receiverId: number,
   senderId: number,
@@ -66,6 +68,7 @@ export interface ReceiveMsg {
   content: string,
   displayedContent: string,
   imageLoaded: boolean,
+  progress: number,
   updatedAt: string,
   sessionId: string,
   talkerId: string,

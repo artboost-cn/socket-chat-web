@@ -156,6 +156,7 @@ export default defineComponent({
         msg.component = msg.talkerId == store.state.currentSession.receiverId ? 'talker-item' : 'user-item';
       }
       msg.displayedContent = ''
+      msg.progress = 0
       msg.imageLoaded = true
       list.push(msg);
       displayMessage(list.length - 1, msg.content);
@@ -176,9 +177,20 @@ export default defineComponent({
     }
     const setImageLoaded = (index: number, imageLoaded: boolean) => {
       let message = state.chatList[index];
-      setTimeout(() => {
+      let interval = 8; // 时间间隔，单位为秒
+      let step = 100 / (interval * 1000 / 2000); // 进度增加的步长
+      console.log(message.progress)
+
+      if (message.progress < 100) {
+        message.progress += step;
+        console.log(message.progress)
+        setTimeout(() => {
+          setImageLoaded(index, imageLoaded);
+        }, 2000); // 每隔100毫秒添加一个字符
+      } else {
+        console.log(999)
         message.imageLoaded = false;
-      }, 1000)
+      }
     }
     // 消息发送成功后的回调
     const sendMsgSuccess = (name: string, msg: SuccessMsg) => {
@@ -273,7 +285,7 @@ export default defineComponent({
           else if (updatedAt_item1 > thisWeek) time = moment(updatedAt_item1).locale('zh-cn').format('dddd HH:mm');
           else time = moment(updatedAt_item1).format('YYYY年MM月DD日 HH:mm');
 
-          return { content: time, displayedContent: '', imageLoaded: true, component: 'notification-tag', updatedAt: updatedAt_item1.toString() };
+          return { content: time, displayedContent: '', imageLoaded: true, progress: 0, component: 'notification-tag', updatedAt: updatedAt_item1.toString() };
         }
       };
     };
